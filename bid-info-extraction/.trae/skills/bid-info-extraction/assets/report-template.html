@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>招标关键信息提取报告</title>
+<style>
+  :root {
+    --bg: #f5f5f0;
+    --card: #ffffff;
+    --text: #2c2c2c;
+    --muted: #6b6b6b;
+    --border: #e0dbd1;
+    --accent: #8b7355;
+    --tag-bg: #f0ebe3;
+    --danger: #c0392b;
+    --danger-bg: #fdf2f2;
+    --warn: #d4a017;
+    --warn-bg: #fef9ee;
+    --ok: #2e7d32;
+    --ok-bg: #e8f5e9;
+    --star: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  h1 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 6px;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700;
+  }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+  .info-grid .label { color: var(--muted); font-size: 13px; }
+  .info-grid .value { font-size: 14px; word-break: break-all; }
+  .info-grid .value.null { color: #ccc; font-style: italic; }
+  @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; } }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--tag-bg); font-weight: 600; font-size: 12px; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn); }
+  .badge-tag { background: var(--tag-bg); color: var(--accent); }
+  .badge-selected { background: var(--ok-bg); color: var(--ok); }
+
+  .star { color: var(--star); font-weight: 700; margin-right: 2px; }
+
+  .clause-list { list-style: none; }
+  .clause-list li {
+    padding: 6px 12px; margin: 4px 0; border-radius: 6px;
+    background: var(--tag-bg); font-size: 13px;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .clause-list .cat { flex-shrink: 0; font-size: 11px; }
+  .clause-list li.danger { background: var(--danger-bg); }
+
+  .timeline-bar {
+    display: flex; gap: 0; margin: 12px 0; overflow-x: auto;
+  }
+  .timeline-item {
+    flex: 1; min-width: 100px; text-align: center; padding: 10px 6px;
+    border-right: 1px solid var(--border); font-size: 12px;
+  }
+  .timeline-item:last-child { border-right: none; }
+  .timeline-item .date { font-weight: 700; color: var(--accent); font-size: 14px; }
+  .timeline-item .label { color: var(--muted); margin-top: 2px; }
+
+  .section { margin-top: 16px; }
+  .section-label { font-size: 13px; font-weight: 700; color: var(--accent); margin: 12px 0 6px; }
+
+  .kv { display: flex; padding: 4px 0; font-size: 13px; }
+  .kv .k { color: var(--muted); width: 120px; flex-shrink: 0; }
+  .kv .v { flex: 1; }
+
+  .quote {
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    padding: 10px 14px; margin: 8px 0; font-size: 13px; border-radius: 0 6px 6px 0;
+  }
+
+  .req-list { list-style: disc; padding-left: 20px; }
+  .req-list li { padding: 3px 0; font-size: 13px; }
+
+  .null { color: #ccc; font-style: italic; }
+
+  /* Risk-specific styles */
+  .risk-summary-bar { display: flex; gap: 8px; margin: 12px 0; }
+  .risk-stat {
+    flex: 1; text-align: center; padding: 10px 6px; border-radius: 6px;
+    color: white; font-weight: 600; font-size: 13px;
+  }
+  .risk-stat .num { font-size: 24px; display: block; }
+  .risk-stat .lbl { font-size: 11px; opacity: 0.9; }
+  .risk-stat.total { background: var(--accent); }
+  .risk-stat.high { background: var(--danger); }
+  .risk-stat.medium { background: var(--warn); }
+  .risk-stat.low { background: var(--ok); }
+
+  .risk-card {
+    padding: 10px 14px; margin: 6px 0; border-radius: 6px;
+    border-left: 4px solid; font-size: 13px;
+  }
+  .risk-card.high { border-color: var(--danger); background: var(--danger-bg); }
+  .risk-card.medium { border-color: var(--warn); background: var(--warn-bg); }
+  .risk-card.low { border-color: var(--ok); background: var(--ok-bg); }
+  .risk-card .finding { font-weight: 600; margin-bottom: 4px; }
+  .risk-card .location { color: var(--muted); font-size: 12px; }
+  .risk-card .suggestion { margin-top: 4px; color: #475569; }
+  .risk-card .policy-ref {
+    margin-top: 6px; font-size: 12px; color: var(--danger);
+    background: var(--danger-bg); padding: 6px 10px; border-radius: 4px;
+  }
+
+  .overall-risk { margin: 8px 0; font-size: 13px; font-weight: 600; }
+  .overall-risk .level-high { color: var(--danger); }
+  .overall-risk .level-medium { color: var(--warn); }
+  .overall-risk .level-low { color: var(--ok); }
+
+  .summary-box {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0; font-size: 13px;
+  }
+
+  .footer {
+    text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <h1 id="pageTitle">招标关键信息提取报告</h1>
+  <p class="subtitle" id="pageSubtitle"></p>
+
+  <div id="riskSummary"></div>
+  <div id="basicInfo"></div>
+  <div id="timeline"></div>
+  <div id="disqualifyingFactors"></div>
+  <div id="qualifications"></div>
+  <div id="technicalRequirements"></div>
+  <div id="commercialRequirements"></div>
+  <div id="evaluationCriteria"></div>
+  <div id="contractTerms"></div>
+  <div id="submissionRequirements"></div>
+  <div id="deviationRequirements"></div>
+
+  <div class="footer" id="footer"></div>
+</div>
+<script>
+window.__BID_DATA__ = {"meta":{"extractedAt":"2026-06-13T00:00:00+08:00","sourceFile":"【招标文件】大学图书馆2024年度数据库采购项目（发布版）.docx","version":"1.0.0","schema":"bid-info-extraction"},"basicInfo":{"projectName":"XXXX大学图书馆2024年度数据库采购项目","projectNumber":"单一采购-2024-135","budget":"5499474元","bidder":{"name":"XXXX大学","contact":"孙老师","address":"郑州市金水东路180号"},"agent":{"name":"科教仪器设备招标有限公司","contact":"老师","address":"科教仪器设备招标有限公司"},"projectDescription":"XXXX大学图书馆2024年度数据库采购项目，采购数据库产品及服务。","packageInfo":{"hasPackages":false,"currentPackage":"","packageDescription":""}},"timeline":{"bidDeadline":"2024年11月27日 9:00（北京时间）","bidOpening":"2024年11月27日 9:00（北京时间）","qaDeadline":"","depositDeadline":"","bidBond":"无（以投标承诺函替代）","otherDates":[{"label":"获取文件时间","date":"2024年11月18日08时30分至2024年11月22日17时30分"},{"label":"交货期","date":"合同签订后30日内"},{"label":"服务期限","date":"1年"},{"label":"投标有效期","date":"自响应文件提交截止之日起60天"}]},"qualifications":{"companyQualifications":["具有独立承担民事责任的能力","具有良好的商业信誉和健全的财务会计制度","具有履行合同所必需的设备和专业技术能力","有依法缴纳税收和社会保障资金的良好记录","参加本项目活动前三年内，在经营活动中没有重大违法记录"],"personnelQualifications":[],"performanceRequirements":[],"consortiumAllowed":false,"otherRequirements":["根据财库[2016]125号和购【2016】15号规定，未被列入失信被执行人、重大税收违法失信主体、采购严重违法失信行为记录名单","不接受联合体"]},"technicalRequirements":{"functionalRequirements":[],"technicalArchitecture":[],"dataRequirements":[],"otherTechnical":["第六章项目需求及技术要求内容在提取过程中未获取到完整文本，需人工补充核对"]},"commercialRequirements":{"pricingMethod":"总报价：完成本项目的全部费用，包括响应服务费、税费、保险费、验收检测费、售后服务费及招标代理服务费等","paymentTerms":"软件安装调试完成且验收合格，乙方提供付款的相关手续并开具合规的增值税专用发票后30日内，甲方支付项目款总额的100%","invoiceRequirements":"供方开具以XXXX大学为客户名称的正规发票（增值税专用发票）","warrantyPeriod":"验收合格之日起（具体年限未填写）年","otherCommercial":["代理服务费由成交单位足额支付","履约保证金：无"]},"evaluationCriteria":{"method":"单一来源协商采购，根据符合采购需求且最终报价采购人能够接受的原则推荐成交供应商","items":[{"name":"资格审查","weight":null,"scoringRule":"协商小组依法对供应商资格进行审查，未通过资格审查的响应文件被拒绝","notes":"必须满足"},{"name":"符合性审查","weight":null,"scoringRule":"协商小组对通过资格审查的响应文件进行初步评审，未实质性响应的按无效处理","notes":"必须满足"},{"name":"协商与报价","weight":null,"scoringRule":"最后一轮协商结束后提交第二次报价（最后报价），根据符合采购需求且最终报价采购人能够接受的原则推荐成交供应商","notes":"最低报价是成交的重要选择但不是唯一依据"}]},"contractTerms":{"deliveryRequirements":"自合同签订之日起（具体天数未填写）日内安装调试完毕，乙方免费送货至甲方指定地点","acceptanceCriteria":"乙方安装调试完毕后书面提出申请，甲方组织验收；5万元以上需国资处二次验收；验收须严格按照合同所列技术参数及指标进行","penaltyClauses":["乙方所供软件不符合规定的，应负责更换并承担费用；如无法更换或更换后仍不符合约定的，甲方有权拒绝接收，乙方应支付合同价款的30%的违约金","乙方不能按时供货，每拖延一日应按合同总额的千分之五向甲方支付违约金","乙方逾期三周不能供货，甲方有权解除合同，并要求乙方支付合同金额30%的违约金","乙方所供软件不符合合同约定，甲方有权对乙方进行每次不低于（未填写金额）元的违约金处罚","乙方违反售后服务承诺未及时履行保修义务的，每发生一次应支付违约金（未填写金额）元"],"ipClauses":["本合同下软件产品及与软件产品有关的源代码、目标代码、文档资料等的全部知识产权均归乙方所有","除本合同约定的软件产品许可使用权外，乙方未向甲方授予、许可或转让软件产品的任何其他知识产权","软件产品仅限于在本合同约定范围内使用，未经乙方书面同意，甲方不得向第三方提供、销售、出租、出借、转让或提供分许可、转许可","甲方不得对许可软件进行反向工程、反汇编、反向翻译等行为"],"confidentialityClauses":[],"indemnityClauses":["若乙方所供软件技术标准、质量标准和运行等不符合规定，乙方应负责更换并承担一切费用","乙方逾期交货或供货不符合约定，需承担违约金及甲方追究违约责任所支付的一切费用（包括但不限于律师费、诉讼费、保全费、公告费、鉴定费、交通食宿费等）"],"terminationClauses":["乙方拒绝接受甲方管理，甲方有权解除合同","乙方因自身问题不能正常供货致使供货期严重延误，甲方有权解除合同","所供软件不符合招标（采购）、投标（响应性）文件、合同附件技术规格书，甲方有权解除合同","所供软件不符合验收标准，甲方有权解除合同","乙方逾期三周不能供货，甲方有权解除合同"],"otherTerms":["本合同一式陆份，甲方肆份、乙方贰份","合同自双方签字且盖章之日起生效","合同履行期限从合同签订之日起至质保期结束","组成本合同的文件及解释顺序：本合同及补充条款、中标通知书、投标文件及其附件、招标（采购）文件及补充通知"]},"submissionRequirements":{"format":"纸质响应文件正本1份、副本2份，与正本内容完全一致的PDF电子版1份（盖章后的正本扫描件）","copies":"正本1份，副本2份，电子版U盘1份","binding":"未明确具体装订要求","sealing":"正本和所有副本分别密封装在单独的信袋中，标明正本/副本字样及供应商名称、采购编号、纸质响应文件字样；电子响应文件U盘单独密封；封套封口处加贴封条并加盖供应商单位章","submissionMethod":"现场递交至指定地点","other":["未按要求密封和标记的响应文件，采购人及代理机构不予受理"]},"disqualifyingFactors":["未提供投标承诺函","投标有效期不足","交货期不满足（合同签订后30日内）","供应商最后报价超过项目预算（5499474元），采购人不能支付","响应文件中对同一货物或包提供选择性报价","响应文件附有采购人不能接受的条件","经协商后供应商所投产品主要技术参数或功能仍然不能满足单一来源采购文件要求","不符合法律、法规和单一来源采购文件中规定的其他实质性要求","出现影响采购公正的违法、违规行为","因重大变故，采购任务取消"],"deviationRequirements":{"mustRespondItemByItem":true,"noDeviationAllowed":false,"deviationItems":["需填写技术条款偏差表，逐条描述是否响应技术要求","需填写商务条款偏差表，逐条描述是否响应商务要求"]},"riskAnalysis":{"overallRiskLevel":"medium","warnings":[{"ruleId":"R003","severity":"high","category":"合规冲突-审计报告","finding":"资格证明文件要求提供经审计的2023年度财务审计报告或银行出具的资信证明或财务报表","location":"第三章 响应文件编制要求 - 资格证明文件 3.2 财务状况报告","suggestion":"我司为非上市企业不对外提供财务数据，考虑提供经审计的替代财务证明文件或申请豁免","companyPolicy":"非上市企业，不对外提供完整财务审计报告"},{"ruleId":"R005","severity":"high","category":"赔偿条款-数据免责","finding":"合同条款中约定若乙方所供软件不符合规定，需赔偿相应损失；质保期内发生质量问题乙方应负责免费更换并赔偿相应损失","location":"第四章 合同文本 - 质保期及售后服务 / 违约责任","suggestion":"与我司数据免责底线原则冲突，标记为高风险，需法务介入协商修改条款","companyPolicy":"数据免责底线原则：不承担因数据准确性导致的间接损失"},{"ruleId":"R006","severity":"high","category":"知识产权纠纷赔偿","finding":"供应商诚信承诺书要求承诺保证采购人在使用我方销售的产品时不承担涉及任何专利权、商标权、著作权或其他知识产权的法律责任，否则由此引起的全部法律责任由我公司承担","location":"第五章 响应文件编制要求 - 供应商诚信承诺书","suggestion":"我司主张通过法律途径解决并承担判决结果，不承担额外赔偿，需法务介入","companyPolicy":"知识产权纠纷由我司主导法律途径解决，承担判决结果不承担额外赔偿"},{"ruleId":"R007","severity":"medium","category":"偏离项过多","finding":"要求填写技术条款偏差表和商务条款偏差表，逐条描述是否响应技术要求；实质性响应条款（标注★）必须满足，否则视为不实质性响应","location":"第五章 响应文件编制要求 - 偏差表 / 第二章 单一来源采购须知","suggestion":"提前识别所有无法满足的条款，评估偏离项对评分的影响，制定应对策略"},{"ruleId":"R008","severity":"medium","category":"准备时间不足","finding":"获取文件截止时间为2024年11月22日17:30，响应文件递交截止时间为2024年11月27日9:00，准备时间约4天","location":"第一章 单一来源采购邀请书","suggestion":"时间紧迫时优先完成废标因素的响应，核心部分优先，非核心部分简化处理"},{"ruleId":"R010","severity":"medium","category":"赠送/试用要求","finding":"合同条款中约定乙方须免费对甲方操作人员进行软件培训；乙方对系统提供终身技术支持；如遇软件升级须提供免费升级支持","location":"第四章 合同文本 - 质保期及售后服务","suggestion":"我司不承诺额外赠送，需评估是否可以作为商务谈判空间"}],"summary":"本项目为单一来源采购，预算约550万元。主要风险集中在三方面：（1）资质要求中需提供经审计的财务报告，与我司非上市企业的政策底线冲突；（2）合同中包含赔偿损失条款及知识产权全部责任承诺，与我司数据免责和知识产权赔偿原则冲突；（3）准备时间仅约4天，需优先处理废标因素响应。建议法务介入协商修改赔偿和知识产权条款，同时准备替代财务证明材料。"}};
+
+function esc(s) { if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+var cardNum = 0;
+function nextNum() { cardNum++; return cardNum; }
+
+function cardWrap(title, badgeHtml, bodyHtml) {
+  return '<div class="card"><div class="card-title"><span class="num">' + nextNum() + '</span>' + esc(title) + (badgeHtml || '') + '</div>' + bodyHtml + '</div>';
+}
+
+function renderRisks(d) {
+  var risks = (d.riskAnalysis && d.riskAnalysis.warnings) || [];
+  var el = document.getElementById('riskSummary');
+  if (!risks.length) {
+    el.innerHTML = cardWrap('风险分析', '', '<div class="null">无风险提示</div>');
+    return;
+  }
+  var high = risks.filter(function(r){return r.severity==='high';}).length;
+  var med = risks.filter(function(r){return r.severity==='medium';}).length;
+  var low = risks.filter(function(r){return r.severity==='low';}).length;
+  var html = cardWrap('风险分析', '<span class="badge badge-danger" style="margin-left:auto">共' + risks.length + '条</span>',
+    '<div class="risk-summary-bar">' +
+      '<div class="risk-stat total"><span class="num">' + risks.length + '</span><span class="lbl">总风险</span></div>' +
+      '<div class="risk-stat high"><span class="num">' + high + '</span><span class="lbl">高风险</span></div>' +
+      '<div class="risk-stat medium"><span class="num">' + med + '</span><span class="lbl">中风险</span></div>' +
+      '<div class="risk-stat low"><span class="num">' + low + '</span><span class="lbl">低风险</span></div>' +
+    '</div>'
+  );
+  var level = d.riskAnalysis.overallRiskLevel || '';
+  if (level) {
+    html += '<div class="overall-risk">总体风险等级: <span class="level-' + level + '">' + esc(level === 'high' ? '高' : level === 'medium' ? '中' : '低') + '</span></div>';
+  }
+  for (var i = 0; i < risks.length; i++) {
+    var r = risks[i];
+    html += '<div class="risk-card ' + r.severity + '">';
+    html += '<span class="badge badge-' + (r.severity === 'high' ? 'danger' : r.severity === 'medium' ? 'warn' : 'selected') + '">' + r.severity.toUpperCase() + '</span> ';
+    html += '<span class="badge badge-tag">' + esc(r.ruleId || '') + '</span> ';
+    html += '<span class="badge badge-tag">' + esc(r.category || '') + '</span>';
+    html += '<div class="finding">' + esc(r.finding) + '</div>';
+    if (r.location) html += '<div class="location">位置: ' + esc(r.location) + '</div>';
+    html += '<div class="suggestion">建议: ' + esc(r.suggestion) + '</div>';
+    if (r.companyPolicy) html += '<div class="policy-ref">公司政策: ' + esc(r.companyPolicy) + '</div>';
+    html += '</div>';
+  }
+  if (d.riskAnalysis.summary) {
+    html += '<div class="summary-box"><strong>综合建议:</strong> ' + esc(d.riskAnalysis.summary) + '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderBasicInfo(d) {
+  var b = d.basicInfo || {};
+  var body = '<div class="info-grid">';
+  body += '<div class="label">项目名称</div><div class="value"><strong>' + esc(b.projectName || '') + '</strong></div>';
+  body += '<div class="label">项目编号</div><div class="value">' + esc(b.projectNumber || '') + '</div>';
+  body += '<div class="label">预算金额</div><div class="value"><strong>' + esc(b.budget || '') + '</strong></div>';
+  if (b.bidder && b.bidder.name) {
+    body += '<div class="label">采购人</div><div class="value">' + esc(b.bidder.name) + '</div>';
+    if (b.bidder.contact) body += '<div class="label">采购人联系人</div><div class="value">' + esc(b.bidder.contact) + '</div>';
+  }
+  if (b.agent && b.agent.name) {
+    body += '<div class="label">代理机构</div><div class="value">' + esc(b.agent.name) + '</div>';
+  }
+  if (b.packageInfo && b.packageInfo.hasPackages) {
+    body += '<div class="label">分包</div><div class="value"><span class="badge badge-selected">' + esc(b.packageInfo.currentPackage || '') + '</span></div>';
+  }
+  body += '</div>';
+  if (b.projectDescription) {
+    body += '<div class="section-label">项目简介</div><div class="quote">' + esc(b.projectDescription) + '</div>';
+  }
+  document.getElementById('basicInfo').innerHTML = cardWrap('项目基础信息', '', body);
+}
+
+function renderTimeline(d) {
+  var t = d.timeline || {};
+  var items = [
+    {l: '投标截止时间', v: t.bidDeadline, critical: true},
+    {l: '开标时间', v: t.bidOpening, critical: true},
+    {l: '答疑截止时间', v: t.qaDeadline, critical: false},
+    {l: '保证金提交截止', v: t.depositDeadline, critical: false},
+    {l: '投标保证金', v: t.bidBond, critical: false}
+  ];
+  if (t.otherDates) {
+    for (var i = 0; i < t.otherDates.length; i++) {
+      items.push({l: t.otherDates[i].label || '其他', v: t.otherDates[i].date, critical: false});
+    }
+  }
+  var body = '';
+  // timeline bar for critical items
+  var barItems = items.filter(function(x){return x.v && x.critical;});
+  if (barItems.length) {
+    body += '<div class="timeline-bar">';
+    for (var j = 0; j < barItems.length; j++) {
+      body += '<div class="timeline-item" style="background:var(--warn-bg)"><div class="date">' + esc(barItems[j].v) + '</div><div class="label">' + esc(barItems[j].l) + '</div></div>';
+    }
+    body += '</div>';
+  }
+  // table
+  body += '<table><thead><tr><th>节点</th><th>时间</th><th>状态</th></tr></thead><tbody>';
+  for (var k = 0; k < items.length; k++) {
+    if (!items[k].v) {
+      body += '<tr><td>' + esc(items[k].l) + '</td><td><span class="null">未提及</span></td><td></td></tr>';
+    } else {
+      body += '<tr><td>' + esc(items[k].l) + '</td><td>' + esc(items[k].v) + '</td><td>' +
+        (items[k].critical ? '<span class="badge badge-danger">关键</span>' : '<span class="badge badge-warn">注意</span>') + '</td></tr>';
+    }
+  }
+  body += '</tbody></table>';
+  document.getElementById('timeline').innerHTML = cardWrap('关键时间节点', '', body);
+}
+
+function renderDisqualifyingFactors(d) {
+  var factors = d.disqualifyingFactors || [];
+  var body = '';
+  if (!factors.length) {
+    body = '<div class="null">未识别到明确的废标因素</div>';
+  } else {
+    body = '<ul class="clause-list">';
+    for (var i = 0; i < factors.length; i++) {
+      body += '<li class="danger"><span class="cat badge badge-tag">废标</span>' + esc(factors[i]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  document.getElementById('disqualifyingFactors').innerHTML = cardWrap('废标与无效投标条款', '<span class="badge badge-danger" style="margin-left:auto">共' + factors.length + '条</span>', body);
+}
+
+function renderQualifications(d) {
+  var q = d.qualifications || {};
+  var body = '';
+  if (q.companyQualifications && q.companyQualifications.length) {
+    body += '<div class="section-label">公司资质</div>';
+    body += '<ul class="req-list">';
+    for (var i = 0; i < q.companyQualifications.length; i++) {
+      body += '<li>' + esc(q.companyQualifications[i]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  if (q.personnelQualifications && q.personnelQualifications.length) {
+    body += '<div class="section-label">人员资质</div>';
+    body += '<ul class="req-list">';
+    for (var j = 0; j < q.personnelQualifications.length; j++) {
+      body += '<li>' + esc(q.personnelQualifications[j]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  if (q.performanceRequirements && q.performanceRequirements.length) {
+    body += '<div class="section-label">业绩要求</div>';
+    body += '<ul class="req-list">';
+    for (var k = 0; k < q.performanceRequirements.length; k++) {
+      body += '<li>' + esc(q.performanceRequirements[k]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  if (q.consortiumAllowed !== undefined) {
+    body += '<div class="kv"><span class="k">联合体投标</span><span class="v"><span class="badge badge-danger">' + (q.consortiumAllowed ? '允许' : '不允许') + '</span></span></div>';
+  }
+  if (q.otherRequirements && q.otherRequirements.length) {
+    body += '<div class="section-label">其他要求</div>';
+    body += '<ul class="req-list">';
+    for (var m = 0; m < q.otherRequirements.length; m++) {
+      body += '<li>' + esc(q.otherRequirements[m]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  document.getElementById('qualifications').innerHTML = cardWrap('投标人资格与资质要求', '', body);
+}
+
+function renderTechnicalRequirements(d) {
+  var t = d.technicalRequirements || {};
+  var body = '';
+  if (t.functionalRequirements && t.functionalRequirements.length) {
+    body += '<div class="section-label">功能要求</div><ul class="req-list">';
+    for (var i = 0; i < t.functionalRequirements.length; i++) body += '<li>' + esc(t.functionalRequirements[i]) + '</li>';
+    body += '</ul>';
+  }
+  if (t.technicalArchitecture && t.technicalArchitecture.length) {
+    body += '<div class="section-label">技术架构</div><ul class="req-list">';
+    for (var j = 0; j < t.technicalArchitecture.length; j++) body += '<li>' + esc(t.technicalArchitecture[j]) + '</li>';
+    body += '</ul>';
+  }
+  if (t.dataRequirements && t.dataRequirements.length) {
+    body += '<div class="section-label">数据要求</div><ul class="req-list">';
+    for (var k = 0; k < t.dataRequirements.length; k++) body += '<li>' + esc(t.dataRequirements[k]) + '</li>';
+    body += '</ul>';
+  }
+  if (t.otherTechnical && t.otherTechnical.length) {
+    body += '<div class="section-label">其他技术要求</div><ul class="req-list">';
+    for (var m = 0; m < t.otherTechnical.length; m++) body += '<li>' + esc(t.otherTechnical[m]) + '</li>';
+    body += '</ul>';
+  }
+  if (!body) body = '<div class="null">未识别到技术需求</div>';
+  document.getElementById('technicalRequirements').innerHTML = cardWrap('技术需求与指标', '', body);
+}
+
+function renderCommercialRequirements(d) {
+  var c = d.commercialRequirements || {};
+  var body = '';
+  body += '<div class="section-label">报价</div>';
+  body += '<div class="kv"><span class="k">报价方式</span><span class="v">' + esc(c.pricingMethod || '') + '</span></div>';
+  body += '<div class="section-label">付款</div>';
+  body += '<div class="quote">' + esc(c.paymentTerms || '') + '</div>';
+  body += '<div class="section-label">发票</div>';
+  body += '<div class="kv"><span class="k">发票要求</span><span class="v">' + esc(c.invoiceRequirements || '') + '</span></div>';
+  body += '<div class="section-label">时间线</div>';
+  body += '<div class="kv"><span class="k">质保期</span><span class="v">' + esc(c.warrantyPeriod || '') + '</span></div>';
+  if (c.otherCommercial && c.otherCommercial.length) {
+    body += '<div class="section-label">其他商务要求</div><ul class="req-list">';
+    for (var i = 0; i < c.otherCommercial.length; i++) body += '<li>' + esc(c.otherCommercial[i]) + '</li>';
+    body += '</ul>';
+  }
+  document.getElementById('commercialRequirements').innerHTML = cardWrap('商务需求', '', body);
+}
+
+function renderEvaluationCriteria(d) {
+  var e = d.evaluationCriteria || {};
+  var body = '';
+  if (e.method) {
+    body += '<div class="quote"><strong>评标方法：</strong>' + esc(e.method) + '</div>';
+  }
+  if (e.items && e.items.length) {
+    body += '<table><thead><tr><th>评分项</th><th>权重</th><th>评分规则</th><th>备注</th></tr></thead><tbody>';
+    for (var i = 0; i < e.items.length; i++) {
+      var item = e.items[i];
+      body += '<tr><td>' + esc(item.name) + '</td><td>' + esc(item.weight != null ? item.weight + '%' : '-') + '</td><td>' + esc(item.scoringRule || '') + '</td><td>' + esc(item.notes || '') + '</td></tr>';
+    }
+    body += '</tbody></table>';
+  } else {
+    body += '<div class="null">未识别到明确的评分标准</div>';
+  }
+  document.getElementById('evaluationCriteria').innerHTML = cardWrap('评分标准', '', body);
+}
+
+function renderContractTerms(d) {
+  var c = d.contractTerms || {};
+  var body = '';
+  if (c.deliveryRequirements) {
+    body += '<div class="section-label">交付要求</div><div class="quote">' + esc(c.deliveryRequirements) + '</div>';
+  }
+  if (c.acceptanceCriteria) {
+    body += '<div class="section-label">验收标准</div><div class="quote">' + esc(c.acceptanceCriteria) + '</div>';
+  }
+  var sections = [
+    {l: '违约责任', v: c.penaltyClauses},
+    {l: '知识产权', v: c.ipClauses},
+    {l: '保密条款', v: c.confidentialityClauses},
+    {l: '赔偿条款', v: c.indemnityClauses},
+    {l: '终止条款', v: c.terminationClauses},
+    {l: '其他条款', v: c.otherTerms}
+  ];
+  for (var i = 0; i < sections.length; i++) {
+    if (!sections[i].v || !sections[i].v.length) continue;
+    body += '<div class="section-label">' + esc(sections[i].l) + '</div>';
+    body += '<ul class="clause-list">';
+    for (var j = 0; j < sections[i].v.length; j++) {
+      body += '<li><span class="cat badge badge-tag">' + esc(sections[i].l) + '</span>' + esc(sections[i].v[j]) + '</li>';
+    }
+    body += '</ul>';
+  }
+  document.getElementById('contractTerms').innerHTML = cardWrap('合同草案关键条款', '', body);
+}
+
+function renderSubmissionRequirements(d) {
+  var s = d.submissionRequirements || {};
+  var body = '';
+  body += '<div class="section-label">文件要求</div>';
+  body += '<div class="info-grid">';
+  body += '<div class="label">文件格式</div><div class="value">' + esc(s.format || '') + '</div>';
+  body += '<div class="label">份数</div><div class="value">' + esc(s.copies || '') + '</div>';
+  body += '<div class="label">密封要求</div><div class="value">' + esc(s.sealing || '') + '</div>';
+  body += '<div class="label">递交方式</div><div class="value">' + esc(s.submissionMethod || '') + '</div>';
+  body += '</div>';
+  if (s.other && s.other.length) {
+    body += '<div class="section-label">其他要求</div><ul class="req-list">';
+    for (var i = 0; i < s.other.length; i++) body += '<li>' + esc(s.other[i]) + '</li>';
+    body += '</ul>';
+  }
+  document.getElementById('submissionRequirements').innerHTML = cardWrap('投标文件编制与封装', '', body);
+}
+
+function renderDeviationRequirements(d) {
+  var dv = d.deviationRequirements || {};
+  var body = '';
+  if (dv.mustRespondItemByItem) {
+    body += '<div class="kv"><span class="k">逐条响应</span><span class="v"><span class="badge badge-danger">是</span></span></div>';
+  }
+  if (dv.noDeviationAllowed) {
+    body += '<div class="kv"><span class="k">允许偏离</span><span class="v"><span class="badge badge-danger">否</span></span></div>';
+  }
+  if (dv.deviationItems && dv.deviationItems.length) {
+    body += '<div class="section-label">已识别的偏离项</div><ul class="req-list">';
+    for (var i = 0; i < dv.deviationItems.length; i++) body += '<li>' + esc(dv.deviationItems[i]) + '</li>';
+    body += '</ul>';
+  }
+  if (!dv.mustRespondItemByItem && !dv.noDeviationAllowed && (!dv.deviationItems || !dv.deviationItems.length)) {
+    body = '<div class="null">未识别到明确的偏离项要求</div>';
+  }
+  document.getElementById('deviationRequirements').innerHTML = cardWrap('偏离项要求', '', body);
+}
+
+function init() {
+  var d = window.__BID_DATA__ || {};
+  var b = d.basicInfo || {};
+  document.getElementById('pageTitle').textContent = b.projectName || '招标关键信息提取报告';
+  document.getElementById('pageSubtitle').textContent =
+    '项目编号：' + esc(b.projectNumber || '') +
+    ' | 预算：' + esc(b.budget || '') +
+    ' | 提取时间：' + esc((d.meta || {}).extractedAt || '');
+  cardNum = 0;
+  renderRisks(d);
+  renderBasicInfo(d);
+  renderTimeline(d);
+  renderDisqualifyingFactors(d);
+  renderQualifications(d);
+  renderTechnicalRequirements(d);
+  renderCommercialRequirements(d);
+  renderEvaluationCriteria(d);
+  renderContractTerms(d);
+  renderSubmissionRequirements(d);
+  renderDeviationRequirements(d);
+  document.getElementById('footer').textContent =
+    '基于 bid-info-extraction 规范生成 · Schema版本 ' + esc((d.meta || {}).version || '') + ' · 生成时间：' + esc((d.meta || {}).extractedAt || '');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

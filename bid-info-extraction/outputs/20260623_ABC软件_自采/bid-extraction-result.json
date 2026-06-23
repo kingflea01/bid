@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "projectName": "XXXX营业部采购ABC软件",
+    "projectNo": "88888-24120719",
+    "tenderName": "XXXX营业部ABC软件单一来源采购文件-自采",
+    "extractedAt": "2026-06-23T23:44:17.493511",
+    "sourceFile": "XXXX营业部ABC软件单一来源采购文件-自采.docx"
+  },
+  "projectBasicInfo": {
+    "projectName": "XXXX营业部采购ABC软件",
+    "projectNo": "88888-24120719",
+    "tenderer": "XXXX营业部",
+    "tenderType": "单一来源采购",
+    "fundSource": "自筹资金",
+    "projectLocation": "XXXX营业部",
+    "deliveryDate": "2024年12月30日",
+    "purchaseScope": "ABC软件",
+    "projectOverview": "XXXX营业部因各业务部门服务客户需求继续采购ABC软件"
+  },
+  "keyDates": {
+    "bidDeadline": "2024年12月6日10时",
+    "bidOpeningTime": "2024年12月6日10时",
+    "negotiationTime": "2024年12月6日10时",
+    "documentObtainStartTime": "2024年12月3日15时",
+    "documentObtainEndTime": "2024年12月5日15时",
+    "bidValidityPeriod": "120日"
+  },
+  "budgetInfo": {
+    "hasMaxPrice": true,
+    "maxPrice": 451000,
+    "maxPriceUnit": "元",
+    "bidBond": "不要求递交",
+    "performanceBond": "不要求递交"
+  },
+  "contactInfo": {
+    "buyerName": "XXXX营业部",
+    "buyerContact": "XX",
+    "buyerPhone": "131XXXX7059",
+    "buyerAddress": "纽约大前门1号楼1层"
+  },
+  "qualifications": {
+    "basicRequirements": [
+      "供应商必须保证响应文件所提供的全部资料真实可靠",
+      "供应商不得存在弄虚作假等不当手段谋取成交的情形"
+    ],
+    "qualificationRequirements": [],
+    "performanceRequirements": [
+      "供应商近三年类似项目情况（需提供合同扫描件）",
+      "近三年指响应文件递交截止日之前完整三个年度"
+    ],
+    "personnelRequirements": [
+      "拟投入主要人员的学历证",
+      "拟投入主要人员的资格证书",
+      "拟投入主要人员的工作履历说明"
+    ],
+    "financialRequirements": [
+      "经会计师事务所或审计机构审计并盖章签字的近三年《审计报告》（含资产负债表、利润表、现金流量表）"
+    ]
+  },
+  "evaluationCriteria": {
+    "method": "单一来源谈判",
+    "items": [],
+    "description": "谈判小组根据谈判情况决定谈判轮次，集中与供应商进行谈判。谈判结束后，谈判小组将要求供应商在规定时间内递交最终报价。"
+  },
+  "technicalRequirements": {
+    "projectOverview": "采购软件，软件提供XXXXXX功能",
+    "servicePeriod": "自服务开通之日起一年",
+    "qualityRequirements": "满足采购人要求，符合国家标准、行业标准和专业标准",
+    "functionalRequirements": [
+      "ABC软件提供XXXXXX功能"
+    ],
+    "nonFunctionalRequirements": [],
+    "otherRequirements": []
+  },
+  "disqualifyingFactors": [
+    {
+      "id": "df_001",
+      "category": "报价",
+      "item": "供应商报价超过最高限价451000元",
+      "isRequired": true,
+      "consequence": "响应无效"
+    },
+    {
+      "id": "df_002",
+      "category": "响应方案",
+      "item": "响应文件未对采购需求和合同条款中的关键条款（标记*或★）作出满足性或更有利于采购人的响应",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_003",
+      "category": "响应方案",
+      "item": "供应商在响应文件中提出多个响应方案",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_004",
+      "category": "保证金",
+      "item": "供应商不按要求递交响应保证金（如要求）",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_005",
+      "category": "诚信",
+      "item": "供应商存在弄虚作假等不当手段谋取成交",
+      "isRequired": true,
+      "consequence": "否决其响应，追究责任"
+    },
+    {
+      "id": "df_006",
+      "category": "有效期",
+      "item": "供应商在响应文件有效期内撤销响应文件",
+      "isRequired": true,
+      "consequence": "响应保证金不予退还"
+    },
+    {
+      "id": "df_007",
+      "category": "履约能力",
+      "item": "供应商处于被责令停产停业、暂扣或者吊销执照、暂扣或者吊销许可证、吊销资质证书状态；进入清算程序，或被宣告破产，或其他丧失履约能力的情形",
+      "isRequired": true,
+      "consequence": "取消成交资格"
+    }
+  ],
+  "contractTerms": {
+    "hasContractDraft": true,
+    "contractType": "技术服务合同",
+    "keyTerms": [
+      "知识产权归属按合同约定",
+      "保密义务按合同约定执行",
+      "违约责任按合同约定执行",
+      "争议解决方式：向甲方所在地人民法院起诉",
+      "质保期按合同约定"
+    ]
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "projectName": "XXXX营业部采购ABC软件",
+    "projectNo": "88888-24120719",
+    "generatedAt": "2026-06-23T23:47:13.263166"
+  },
+  "fillingPriorities": [
+    {
+      "placeholder": "{{SUPPLIER_NAME}}",
+      "label": "SUPPLIER_NAME",
+      "priority": "required",
+      "reason": "供应商名称，必须填写"
+    },
+    {
+      "placeholder": "{{PROJECT_NO}}",
+      "label": "PROJECT_NO",
+      "priority": "required",
+      "reason": "采购/项目编号，必须填写"
+    },
+    {
+      "placeholder": "{{SIGN_DATE}}",
+      "label": "SIGN_DATE",
+      "priority": "required",
+      "reason": "签署日期，必须填写"
+    },
+    {
+      "placeholder": "{{BUYER_NAME}}",
+      "label": "BUYER_NAME",
+      "priority": "required",
+      "reason": "采购人名称，必须填写"
+    },
+    {
+      "placeholder": "{{PROJECT_NAME}}",
+      "label": "PROJECT_NAME",
+      "priority": "required",
+      "reason": "项目名称，必须填写"
+    },
+    {
+      "placeholder": "{{AUTH_REP_NAME}}",
+      "label": "AUTH_REP_NAME",
+      "priority": "important",
+      "reason": "被授权人姓名，重要"
+    }
+  ],
+  "disqualificationChecklist": [
+    {
+      "id": "df_001",
+      "category": "报价",
+      "item": "供应商报价超过最高限价451000元",
+      "isRequired": true,
+      "consequence": "响应无效"
+    },
+    {
+      "id": "df_002",
+      "category": "响应方案",
+      "item": "响应文件未对采购需求和合同条款中的关键条款（标记*或★）作出满足性或更有利于采购人的响应",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_003",
+      "category": "响应方案",
+      "item": "供应商在响应文件中提出多个响应方案",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_004",
+      "category": "保证金",
+      "item": "供应商不按要求递交响应保证金（如要求）",
+      "isRequired": true,
+      "consequence": "响应文件被视为无效"
+    },
+    {
+      "id": "df_005",
+      "category": "诚信",
+      "item": "供应商存在弄虚作假等不当手段谋取成交",
+      "isRequired": true,
+      "consequence": "否决其响应，追究责任"
+    },
+    {
+      "id": "df_006",
+      "category": "有效期",
+      "item": "供应商在响应文件有效期内撤销响应文件",
+      "isRequired": true,
+      "consequence": "响应保证金不予退还"
+    },
+    {
+      "id": "df_007",
+      "category": "履约能力",
+      "item": "供应商处于被责令停产停业、暂扣或者吊销执照、暂扣或者吊销许可证、吊销资质证书状态；进入清算程序，或被宣告破产，或其他丧失履约能力的情形",
+      "isRequired": true,
+      "consequence": "取消成交资格"
+    }
+  ],
+  "fillingInstructions": [
+    {
+      "sectionId": "cover",
+      "sectionName": "封面",
+      "subsections": [
+        {
+          "id": "cover_basic",
+          "name": "封面基本信息",
+          "instruction": "填写供应商名称、采购编号、日期，并在指定位置加盖公章。",
+          "documentType": "无需附件",
+          "requiredFormat": "加盖公章",
+          "tips": "确保采购编号与招标文件一致"
+        }
+      ]
+    },
+    {
+      "sectionId": "1_响应函",
+      "sectionName": "1.响应函",
+      "subsections": [
+        {
+          "id": "response_letter",
+          "name": "响应函",
+          "instruction": "填写采购人名称、项目名称，确认响应全部要求，由法定代表人或授权代表签字并加盖公章。",
+          "documentType": "无需附件",
+          "requiredFormat": "签字并加盖公章",
+          "tips": "确保项目名称和编号准确无误"
+        }
+      ]
+    },
+    {
+      "sectionId": "2_授权委托书",
+      "sectionName": "2.授权委托书",
+      "subsections": [
+        {
+          "id": "auth_letter",
+          "name": "授权委托书",
+          "instruction": "填写单位名称、被授权人姓名及电话、委托期限，由法定代表人签字并加盖公章。附委托代理人身份证扫描件。",
+          "documentType": "身份证扫描件",
+          "requiredFormat": "签字并加盖公章",
+          "tips": "委托期限需覆盖整个采购周期"
+        }
+      ]
+    },
+    {
+      "sectionId": "3_响应保证金",
+      "sectionName": "3.响应保证金",
+      "subsections": [
+        {
+          "id": "bid_bond",
+          "name": "响应保证金",
+          "instruction": "如采用电汇，提供汇款凭证扫描件；如采用保函，提供保函扫描件。",
+          "documentType": "汇款凭证或保函扫描件",
+          "requiredFormat": "原件扫描件",
+          "tips": "本项目不要求递交响应保证金（根据供应商须知前附表）"
+        }
+      ]
+    },
+    {
+      "sectionId": "4_报价表",
+      "sectionName": "4.报价表",
+      "subsections": [
+        {
+          "id": "price_table",
+          "name": "报价表",
+          "instruction": "按报价总表格式填写不含税金额、税额、价税合计，确保报价不超过最高限价451000元。",
+          "documentType": "无需附件",
+          "requiredFormat": "加盖公章",
+          "tips": "报价需包含所有费用，大小写金额需一致"
+        }
+      ]
+    },
+    {
+      "sectionId": "5_商务资料",
+      "sectionName": "5.商务资料",
+      "subsections": [
+        {
+          "id": "biz_info",
+          "name": "商务资料",
+          "instruction": "提供供应商基本情况、营业执照、资质证书、近三年审计报告、类似项目业绩、拟投入主要人员等材料。",
+          "documentType": "营业执照、资质证书、审计报告、合同扫描件等",
+          "requiredFormat": "扫描件加盖公章",
+          "tips": "业绩需提供合同扫描件（封面、范围、签字页）"
+        }
+      ]
+    },
+    {
+      "sectionId": "6_响应方案",
+      "sectionName": "6.响应方案",
+      "subsections": [
+        {
+          "id": "tech_solution",
+          "name": "响应方案",
+          "instruction": "针对采购需求逐项响应，包括项目理解、重点难点分析、实施方案、保障措施等内容。",
+          "documentType": "无需附件",
+          "requiredFormat": "纸质/电子版",
+          "tips": "需对评分标准逐项响应，突出自身优势"
+        }
+      ]
+    }
+  ],
+  "scoringGuide": [
+    {
+      "category": "谈判说明",
+      "maxScore": 0,
+      "items": [
+        {
+          "name": "价格谈判",
+          "score": 0,
+          "requirements": "单一来源采购通过谈判确定最终价格",
+          "suggestion": "准备好价格构成说明，突出产品价值和服务优势"
+        },
+        {
+          "name": "技术响应",
+          "score": 0,
+          "requirements": "需满足采购需求中的全部技术要求",
+          "suggestion": "逐项响应技术需求，提供详细的技术方案"
+        }
+      ]
+    }
+  ],
+  "deduplicationLog": {
+    "skipped": [
+      {
+        "content": "人员资质要求",
+        "reason": "已存在于商务资料章节"
+      },
+      {
+        "content": "业绩要求说明",
+        "reason": "已存在于商务资料章节"
+      },
+      {
+        "content": "财务状况要求",
+        "reason": "已存在于商务资料章节"
+      },
+      {
+        "content": "评审响应说明",
+        "reason": "已存在于响应方案章节"
+      },
+      {
+        "content": "技术需求响应",
+        "reason": "已存在于响应方案章节"
+      },
+      {
+        "content": "服务与质量要求",
+        "reason": "已存在于响应方案章节"
+      }
+    ],
+    "added": [
+      {
+        "content": "公司资质证明",
+        "location": "商务资料章节"
+      }
+    ]
+  }
+}

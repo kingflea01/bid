@@ -1,0 +1,153 @@
+{
+  "$schema": "bid-info-extraction-company-profile-v1",
+  "version": "1.0.0",
+  "companyInfo": {
+    "name": "Wind",
+    "industry": "金融信息服务",
+    "description": "为机构客户提供专业的金融数据终端软件以及金融数据库服务",
+    "coreCompetencies": [
+      "产品功能最全且好用",
+      "大陆机构客户口碑好、用户体量大",
+      "覆盖绝大多数银行、保险、基金公司",
+      "政府和监管机构客户",
+      "数据全、更新快、准确率高",
+      "海外市场拓展，全球顶级金融机构客户"
+    ],
+    "bidCharacteristics": [
+      "非上市企业，不对外提供完整财务审计报告",
+      "不提供与第三方签订的完整不脱敏合同",
+      "数据免责底线原则：不承担因数据准确性导致的间接损失",
+      "知识产权纠纷由我司主导法律途径解决，承担判决结果不承担额外赔偿",
+      "不承诺额外赠送产品或开通试用账号"
+    ],
+    "availableCompanyQualifications": [
+      "ISO27001",
+      "ISO9001",
+      "CMMI3",
+      "等保三级备案",
+      "高新技术企业证书",
+      "软件企业证书",
+      "软件著作权证书",
+      "专利证书",
+      "各大交易所行情授权证书（合同）",
+      "营业执照",
+      "社保缴纳证明",
+      "纳税证明",
+      "财务审计报告",
+      "银行资信证明",
+      "法人身份证"
+    ],
+    "availablePersonnelQualifications": [
+      "被授权人身份证",
+      "被授权人社保缴纳证明",
+      "被授权人学历证明",
+      "项目成员身份证",
+      "项目成员社保缴纳证明",
+      "项目成员学历证明"
+    ]
+  },
+  "riskRules": [
+    {
+      "ruleId": "R001",
+      "severity": "high",
+      "category": "价格战",
+      "triggerDescription": "竞争对手可能报出远低于市场价的低价",
+      "matchKeywords": ["最低价", "低价优先", "价格分权重", "低价中标"],
+      "suggestion": "评估是否打价格战，如无法接受低价则考虑放弃或突出综合服务优势"
+    },
+    {
+      "ruleId": "R002",
+      "severity": "high",
+      "category": "资质排他",
+      "triggerDescription": "招标文件中的资质证书要求具有排他性或倾向性",
+      "matchKeywords": ["须具有", "必须持有", "独家授权", "指定资质"],
+      "suggestion": "检查资质要求是否合理，是否存在排他性，必要时提出质疑"
+    },
+    {
+      "ruleId": "R003",
+      "severity": "high",
+      "category": "合规冲突-审计报告",
+      "triggerDescription": "要求提供完整的审计报告或财务数据",
+      "matchKeywords": ["审计报告", "财务报表", "财务数据", "审计意见"],
+      "suggestion": "我司为非上市企业不对外提供财务数据，考虑提供经审计的替代财务证明文件或申请豁免"
+    },
+    {
+      "ruleId": "R004",
+      "severity": "high",
+      "category": "合规冲突-完整合同",
+      "triggerDescription": "要求提供与第三方签订的完整不脱敏合同",
+      "matchKeywords": ["完整合同", "不脱敏", "原始合同", "合同原件"],
+      "suggestion": "涉及客户商业秘密无法提供，可提供脱敏版本或项目验收证明替代"
+    },
+    {
+      "ruleId": "R005",
+      "severity": "high",
+      "category": "赔偿条款-数据免责",
+      "triggerDescription": "要求对数据准确性或使用后果承担赔偿责任的条款",
+      "matchKeywords": ["赔偿", "损失", "承担责任", "连带", "数据准确", "数据质量"],
+      "suggestion": "与我司数据免责底线原则冲突，标记为高风险，需法务介入协商修改条款"
+    },
+    {
+      "ruleId": "R006",
+      "severity": "high",
+      "category": "知识产权纠纷赔偿",
+      "triggerDescription": "要求对知识产权纠纷承担额外赔偿的条款",
+      "matchKeywords": ["知识产权", "侵权", "纠纷赔偿", "知识产权赔偿"],
+      "suggestion": "我司主张通过法律途径解决并承担判决结果，不承担额外赔偿，需法务介入"
+    },
+    {
+      "ruleId": "R007",
+      "severity": "medium",
+      "category": "偏离项过多",
+      "triggerDescription": "要求逐条响应合同条款且不允许偏离，或偏离过多影响评分",
+      "matchKeywords": ["逐条响应", "偏离", "不响应", "负偏离", "不可偏离"],
+      "suggestion": "提前识别所有无法满足的条款，评估偏离项对评分的影响，制定应对策略"
+    },
+    {
+      "ruleId": "R008",
+      "severity": "medium",
+      "category": "准备时间不足",
+      "triggerDescription": "投标准备时间较短，可能导致标书不完善",
+      "matchKeywords": ["时间", "截止", "紧迫"],
+      "detectByDateDiff": true,
+      "suggestion": "时间紧迫时优先完成废标因素的响应，核心部分优先，非核心部分简化处理"
+    },
+    {
+      "ruleId": "R009",
+      "severity": "medium",
+      "category": "地域倾向",
+      "triggerDescription": "对供应商所在地提出倾向性要求",
+      "matchKeywords": ["本地注册", "本地企业", "本地化服务", "本地分支机构"],
+      "suggestion": "评估是否满足地域要求，如不满足可提供远程服务方案或本地合作证明"
+    },
+    {
+      "ruleId": "R010",
+      "severity": "medium",
+      "category": "赠送/试用要求",
+      "triggerDescription": "要求承诺额外赠送产品或开通试用账号",
+      "matchKeywords": ["赠送", "免费提供", "试用", "免费开通", "额外提供"],
+      "suggestion": "我司不承诺额外赠送，需评估是否可以作为商务谈判空间"
+    },
+    {
+      "ruleId": "R011",
+      "severity": "low",
+      "category": "同质化竞争",
+      "triggerDescription": "市场同类产品同质化程度较高，难以在数据技术层面拉开差距",
+      "matchKeywords": ["同质化", "同类产品", "可替代"],
+      "suggestion": "突出我司用户体量、数据质量、客户口碑等差异化优势"
+    },
+    {
+      "ruleId": "R012",
+      "severity": "medium",
+      "category": "资质证书超出范围",
+      "triggerDescription": "招标文件要求提供的公司或人员资质证书超出我司可提供的范围。需将招标文件中所有资质要求逐条与companyInfo中的availableCompanyQualifications和availablePersonnelQualifications比对，任何不在此列表中的证书或证明均需标记。",
+      "matchKeywords": ["资质证书", "资质证明", "资格证书", "认证证书", "许可证明", "资质等级", "资质要求", "人员资质", "项目经理", "高级工程师", "PMP", "系统集成", "信息系统项目管理", "网络工程师", "信息安全等级保护测评师", "注册信息安全专业人员"],
+      "crossCheck": true,
+      "availableIn": {
+        "company": "companyInfo.availableCompanyQualifications",
+        "personnel": "companyInfo.availablePersonnelQualifications"
+      },
+      "suggestion": "识别出招标文件要求但我司不具备的资质证书，评估是否可以办理或替代，无法满足时需与招标方沟通确认是否影响投标资格"
+    }
+  ]
+}

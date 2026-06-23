@@ -1,0 +1,885 @@
+{
+  "cover_template": {
+    "elements": [
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "项目单一来源采购",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "响应文件",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Normal",
+        "text": "（采购编号：{{PROJECT_NO}}）",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "供应商：{{SUPPLIER_NAME}}（盖章）",
+        "is_heading": false,
+        "heading_level": null
+      },
+      {
+        "type": "paragraph",
+        "style": "Body Text",
+        "text": "日  期：{{SIGN_DATE}}",
+        "is_heading": false,
+        "heading_level": null
+      }
+    ],
+    "placeholders": [
+      "{{SUPPLIER_NAME}}",
+      "{{PROJECT_NO}}",
+      "{{SIGN_DATE}}"
+    ]
+  },
+  "chapters": [
+    {
+      "title": "1.响应函",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "1.响应函",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "响应函",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "致：{{BUYER_NAME}}",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "1.我方已仔细研究了{{PROJECT_NAME}}采购文件的全部内容，愿意以本响应文件报价表中载明的报价完成本项目全部工作，并按合同约定履行义务。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "2.我方的响应文件包括下列内容：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（1）响应函；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（2）授权委托书；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（3）响应保证金（如有）；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（4）报价表；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（5）商务资料；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（6）响应方案；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "响应文件的上述组成部分如存在内容不一致的，以响应函为准。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "3.我方承诺响应采购文件的全部要求。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.我方承诺在采购文件规定的响应文件有效期内不撤销响应文件。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.如我方成交，我方承诺：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（1）在收到成交通知书后，在成交通知书规定的期限内与你方签订合同；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（2）在签订合同时不向你方提出附加条件；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（3）按照采购文件要求递交履约保证金；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（4）在合同约定的期限内完成合同规定的全部义务；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（5）我方承诺没有处于被责令停产停业、暂扣或者吊销执照、暂扣或者吊销许可证、吊销资质证书状态；没有进入清算程序，或被宣告破产，或其他丧失履约能力的情形；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "6.我方在此声明，所递交的响应文件及有关资料内容完整、真实和准确，愿意接受采购人对其中任何资料在合同最终授予前进一步审查的要求，若我方存在弄虚作假等不当手段谋取成交，愿意按照第二章“供应商须知前附表”的相关规定执行。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "供应商：{{SUPPLIER_NAME}}",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "年    月    日",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": [
+        "{{BUYER_NAME}}",
+        "{{PROJECT_NAME}}",
+        "{{SUPPLIER_NAME}}"
+      ]
+    },
+    {
+      "title": "2.授权委托书",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "2.授权委托书",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "授权委托书",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "本单位{{SUPPLIER_NAME}}现委托{{AUTH_REP_NAME}}为我方代理人。代理人根据授权，以我方名义签署、澄清确认、递交、撤回、修改本项目响应文件、签订合同和处理有关事宜，其法律后果由我方承担。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "委托期限：自本委托书签署之日起至本项目签订采购合同之日止。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "代理人无转委托权。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "附：委托代理人身份证扫描件。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": [
+        "{{SUPPLIER_NAME}}",
+        "{{AUTH_REP_NAME}}"
+      ]
+    },
+    {
+      "title": "3.响应保证金",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "3.响应保证金",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "若采用银行电汇，供应商应在此提供汇款凭证的扫描件。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "若采用保函形式，供应商应在此提供保函扫描件，原件按照第二章“供应商须知前附表”第3.4.1项的要求递交。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "保函格式参考如下：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "响应保函",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "{{BUYER_NAME}}：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "鉴于{{SUPPLIER_NAME}}（以下称“供应商”）于___年___月___日参加{{PROJECT_NAME}}单一来源采购活动，_________（担保人名称，以下简称“我方”）无条件地、不可撤销地保证：若供应商在响应有效期内撤销响应文件，成交后无正当理由不与采购人订立合同，在签订合同时向采购人提出附加条件，不按照采购文件要求提交履约保证金，或者发生采购文件明确规定可以不予退还响应保证金的其他情形，我方承担保证责任。收到你方书面通知后，我方在7日内向你方无条件支付人民币（大写）_________。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "本保函在响应有效期内保持有效。要求我方承担保证责任的通知应在响应有效期内送达我方。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "担保人名称：\t\t（盖单位章）",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "法定代表人或委托代理人：\t\t（签字）",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "地址：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "邮政编码：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "电话：",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": [
+        "{{BUYER_NAME}}",
+        "{{SUPPLIER_NAME}}",
+        "{{PROJECT_NAME}}"
+      ]
+    },
+    {
+      "title": "4.报价表",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "4.报价表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.1 报价说明",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.1.1供应商应按照采购文件确定的工作范围和要求进行报价。响应价格是指响应文件中说明的全部工作内容的报酬。如有任何折扣声明，供应商也须在响应文件中注明。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.1.2响应报价已包含供应商的人员工资、福利费、工会经费、教育经费、养老保险、住房公积金、办公费、差旅费、通讯费、交通费、加班费、医疗费、现场补贴、公司管理费、住宿费、电话费、利润、自身人员人身及财产保险、税金项目以及项目所需的设备材料等全部费用。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.2 报价表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.2.1报价总表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "报价总表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "供应商名称：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "年         月          日",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.2.2分项报价表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "格式自拟。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": []
+    },
+    {
+      "title": "5.商务资料",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "5.商务资料",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.1 供应商基本情况",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.1.1供应商情况简介；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.1.2营业执照、资质证书等。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.2 供应商近三年财务状况",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "经会计师事务所或审计机构审计并盖章签字的近三年《审计报告》（含资产负债表、利润表、现金流量表）。近三年是指响应文件递交截止日之前完整三个年度，若响应文件递交截止日为本年度6月30日以前的，可不提供上一年度，但需提供上一年度之前的三个年度；若供应商成立时间不满三年的，提供时间为自供应商成立之日至响应文件递交截止日。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.3 供应商近三年类似项目情况表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "供应商近三年的类似项目情况表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "序号",
+              "项目名称",
+              "发包人 名称",
+              "发包人联系人及电话",
+              "合同价格",
+              "合同是否履行完毕",
+              "项目负责人（如有）",
+              "项目概况（建设内容、规模等）",
+              "备注"
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "注：供应商应在本表后提供类似项目合同扫描件（包括封面页、合同范围页、签字盖章页）等证明材料。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.4 拟投入的主要人员汇总表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "拟投入的主要人员汇总表",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "table",
+          "rows": [
+            [
+              "序号",
+              "本项目任职",
+              "姓名",
+              "职称",
+              "专业",
+              "年龄",
+              "备注"
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            [
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "注：供应商应在本表后提供主要负责人的学历证、资格证书、工作履历说明等。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.5 其它材料",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "供应商还可在此提供认为应提交的其它材料。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Heading 3",
+          "text": "公司资质证明",
+          "is_heading": true,
+          "heading_level": 3
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（1）营业执照",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "（2）资质证书（具体未列明，需在响应文件中提供）",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "注：请提供上述资质证书的扫描件，加盖公章。",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": []
+    },
+    {
+      "title": "6.响应方案",
+      "elements": [
+        {
+          "type": "paragraph",
+          "style": "1",
+          "text": "6.响应方案",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "响应方案应根据第四章“采购需求”中列明的要求逐项响应编制，包括但不限于如下内容：",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "1.对项目的理解；",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "2.项目重点、难点分析",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "3.项目实施方案（包括进度安排、质量控制、安全管理、人员安排等）",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "4.保障措施",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "5.其它",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Heading 3",
+          "text": "评审响应说明",
+          "is_heading": true,
+          "heading_level": 3
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "评审方式说明：单一来源谈判",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "谈判小组根据谈判情况决定谈判轮次，集中与供应商进行谈判。谈判结束后，谈判小组将要求供应商在规定时间内递交最终报价。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Heading 3",
+          "text": "技术需求响应",
+          "is_heading": true,
+          "heading_level": 3
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "1. ABC软件提供XXXXXX功能",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "注：请逐项响应上述技术需求。",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Heading 3",
+          "text": "服务与质量要求",
+          "is_heading": true,
+          "heading_level": 3
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "服务期：自服务开通之日起一年",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "质量要求：满足采购人要求，符合国家标准、行业标准和专业标准",
+          "is_heading": false,
+          "heading_level": null
+        },
+        {
+          "type": "paragraph",
+          "style": "Normal",
+          "text": "项目概况：采购软件，软件提供XXXXXX功能",
+          "is_heading": false,
+          "heading_level": null
+        }
+      ],
+      "placeholders": []
+    }
+  ]
+}
