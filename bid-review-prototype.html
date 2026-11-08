@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>标书工坊 · 章节式初稿审阅</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --panel: #ffffff;
+      --panel-subtle: #f8f9fb;
+      --ink: #202124;
+      --muted: #69707d;
+      --faint: #9299a5;
+      --line: #e3e6eb;
+      --line-strong: #d5dae2;
+      --accent: #5146e5;
+      --accent-dark: #4035c7;
+      --accent-soft: #efeeff;
+      --green: #18865b;
+      --green-soft: #eaf7f0;
+      --amber: #a86308;
+      --amber-soft: #fff6e6;
+      --red: #bd3c45;
+      --red-soft: #fff0f1;
+      --shadow: 0 12px 36px rgba(27, 32, 44, .09);
+      --radius: 12px;
+      --font: Inter, "SF Pro Text", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; font-family: var(--font); color: var(--ink); background: var(--bg); }
+    body { overflow: hidden; font-size: 14px; }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    button, [role="button"] { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .svg-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .icon { width: 17px; height: 17px; display: inline-block; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .icon.sm { width: 14px; height: 14px; }
+    .icon.lg { width: 20px; height: 20px; }
+    .btn { border: 1px solid var(--line-strong); background: var(--panel); min-height: 34px; padding: 0 12px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer; font-weight: 550; transition: background .15s, border-color .15s, transform .15s; white-space: nowrap; }
+    .btn:hover { background: var(--panel-subtle); border-color: #c5cbd5; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn.primary:hover { background: var(--accent-dark); }
+    .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+    .btn.ghost:hover { background: #eceef2; color: var(--ink); }
+    .btn.subtle { border-color: transparent; background: var(--accent-soft); color: var(--accent-dark); }
+    .btn.small { min-height: 29px; padding: 0 9px; font-size: 12px; border-radius: 7px; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .icon-btn { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .icon-btn:hover { background: #eceef2; color: var(--ink); }
+    .icon-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+    .app { height: 100vh; display: grid; grid-template-rows: 58px 74px minmax(0, 1fr); }
+    .app-header { background: var(--panel); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; padding: 0 20px; z-index: 20; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 200px; }
+    .brand-mark { width: 31px; height: 31px; border-radius: 9px; background: var(--accent); color: white; display: grid; place-items: center; }
+    .brand-mark .icon { width: 19px; height: 19px; }
+    .brand-name { font-size: 16px; font-weight: 750; letter-spacing: .02em; line-height: 18px; }
+    .brand-sub { font-size: 9px; color: var(--faint); letter-spacing: .15em; font-weight: 650; }
+    .header-separator { width: 1px; height: 24px; background: var(--line); }
+    .project-switch { border: 0; background: transparent; display: flex; align-items: center; gap: 8px; max-width: 340px; cursor: pointer; padding: 7px 8px; border-radius: 8px; color: var(--muted); }
+    .project-switch:hover { background: var(--panel-subtle); }
+    .project-switch span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .header-spacer { flex: 1; }
+    .agent-state { display: flex; align-items: center; gap: 8px; border: 0; background: transparent; color: var(--muted); padding: 7px 9px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+    .agent-state:hover { background: var(--panel-subtle); }
+    .pulse { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 4px var(--accent-soft); }
+    .agent-state strong { color: var(--accent-dark); font-weight: 650; }
+    .avatar { width: 31px; height: 31px; border-radius: 50%; background: #292b32; color: white; display: grid; place-items: center; font-size: 12px; font-weight: 650; }
+
+    .project-strip { background: var(--panel); border-bottom: 1px solid var(--line); padding: 12px 22px; display: flex; align-items: center; gap: 24px; }
+    .project-identity { min-width: 0; flex: 1; }
+    .breadcrumb { color: var(--faint); font-size: 11px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .project-title-line { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .project-title { font-size: 16px; font-weight: 680; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .draft-badge { color: var(--accent-dark); background: var(--accent-soft); border-radius: 5px; padding: 2px 7px; font-size: 11px; font-weight: 650; white-space: nowrap; }
+    .project-metrics { display: flex; align-items: center; gap: 22px; }
+    .metric { min-width: 72px; }
+    .metric-label { font-size: 11px; color: var(--faint); margin-bottom: 4px; }
+    .metric-value { font-size: 13px; font-weight: 650; }
+    .metric-value.warn { color: var(--amber); }
+    .readiness { display: flex; align-items: center; gap: 10px; min-width: 150px; }
+    .readiness-bar { width: 92px; height: 5px; border-radius: 5px; background: #e9ebf0; overflow: hidden; margin-top: 5px; }
+    .readiness-fill { height: 100%; background: var(--accent); border-radius: inherit; transition: width .35s ease; }
+
+    .workspace { min-height: 0; display: grid; grid-template-columns: 248px minmax(430px, 1fr) 348px; }
+    .left-panel, .right-panel { background: var(--panel); min-height: 0; display: flex; flex-direction: column; }
+    .left-panel { border-right: 1px solid var(--line); }
+    .right-panel { border-left: 1px solid var(--line); }
+    .panel-head { min-height: 52px; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .panel-title { font-weight: 680; font-size: 13px; }
+    .panel-subtitle { font-size: 11px; color: var(--faint); margin-top: 2px; }
+    .tree-tools { padding: 12px 12px 8px; display: grid; gap: 8px; }
+    .search-box { position: relative; }
+    .search-box .icon { position: absolute; left: 10px; top: 9px; color: var(--faint); }
+    .search-box input { width: 100%; height: 33px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px 0 32px; background: var(--panel-subtle); color: var(--ink); }
+    .search-box input::placeholder { color: var(--faint); }
+    .tree-hint { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--faint); padding: 0 2px; }
+    .chapter-tree { flex: 1; min-height: 0; overflow: auto; padding: 3px 8px 14px; }
+    .tree-row { height: 35px; display: flex; align-items: center; gap: 5px; border-radius: 7px; padding-right: 6px; color: #4e5561; cursor: pointer; position: relative; border: 1px solid transparent; user-select: none; }
+    .tree-row:hover { background: var(--panel-subtle); }
+    .tree-row.active { background: var(--accent-soft); color: var(--accent-dark); }
+    .tree-row.dragging { opacity: .4; }
+    .tree-row.drop-before::before, .tree-row.drop-after::after { content: ""; position: absolute; left: 7px; right: 7px; height: 2px; background: var(--accent); border-radius: 2px; }
+    .tree-row.drop-before::before { top: -2px; }
+    .tree-row.drop-after::after { bottom: -2px; }
+    .tree-indent { flex: 0 0 auto; }
+    .tree-expander { width: 17px; height: 28px; padding: 0; border: 0; background: transparent; color: var(--faint); display: grid; place-items: center; cursor: pointer; }
+    .tree-expander .icon { transition: transform .16s; }
+    .tree-expander.closed .icon { transform: rotate(-90deg); }
+    .tree-drag { width: 15px; color: #b0b5bf; display: grid; place-items: center; cursor: grab; }
+    .tree-drag.locked { cursor: not-allowed; color: #c2c6ce; }
+    .tree-status { width: 6px; height: 6px; border-radius: 50%; background: #b6bcc6; flex: 0 0 auto; }
+    .tree-status.confirmed { background: var(--green); }
+    .tree-status.pending, .tree-status.review { background: var(--amber); }
+    .tree-status.gap { background: var(--red); }
+    .tree-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+    .tree-count { font-size: 10px; color: var(--faint); }
+    .left-summary { border-top: 1px solid var(--line); padding: 14px 15px; }
+    .coverage-line { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 8px; }
+    .coverage-line span { color: var(--muted); }
+    .coverage-line strong { font-size: 13px; }
+    .mini-progress { height: 4px; border-radius: 4px; background: #e9ebf0; overflow: hidden; }
+    .mini-progress > div { height: 100%; background: var(--accent); }
+    .gap-link { width: 100%; margin-top: 12px; padding: 9px 0 0; border: 0; border-top: 1px dashed var(--line); background: transparent; color: var(--red); display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 12px; }
+
+    .main-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
+    .workspace-toolbar { min-height: 53px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.68); padding: 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .workspace-name { display: flex; align-items: baseline; gap: 9px; }
+    .workspace-name h1 { margin: 0; font-size: 14px; font-weight: 680; }
+    .workspace-name span { color: var(--faint); font-size: 11px; }
+    .structure-actions { display: flex; align-items: center; gap: 3px; }
+    .toolbar-divider { width: 1px; height: 19px; background: var(--line-strong); margin: 0 5px; }
+    .impact-banner { margin: 12px 18px 0; padding: 11px 13px; background: var(--amber-soft); border: 1px solid #eed8ae; border-radius: 10px; display: flex; align-items: flex-start; gap: 10px; color: #71470d; animation: slideDown .22s ease; }
+    .impact-banner[hidden] { display: none; }
+    .impact-banner .icon { margin-top: 1px; }
+    .impact-copy { flex: 1; min-width: 0; font-size: 12px; line-height: 19px; }
+    .impact-copy strong { display: block; font-size: 12px; }
+    .impact-actions { display: flex; gap: 5px; }
+    .card-stream { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 18px 90px; scroll-behavior: smooth; }
+    .stream-intro { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 12px; color: var(--faint); font-size: 11px; }
+    .stream-intro span { display: flex; align-items: center; gap: 6px; }
+    .chapter-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 12px; position: relative; transition: border-color .18s, box-shadow .18s, transform .18s; scroll-margin-top: 14px; }
+    .chapter-card:hover { border-color: #cbd0da; }
+    .chapter-card.active { border-color: #8d86ed; box-shadow: 0 0 0 2px rgba(81,70,229,.08), 0 7px 20px rgba(39,43,58,.05); }
+    .chapter-card.content-changed { animation: contentPulse .5s ease; }
+    .card-select-line { position: absolute; left: -1px; top: 14px; bottom: 14px; width: 3px; border-radius: 0 3px 3px 0; background: transparent; }
+    .chapter-card.active .card-select-line { background: var(--accent); }
+    .card-header { min-height: 58px; padding: 12px 14px; display: flex; align-items: center; gap: 9px; cursor: pointer; }
+    .card-collapse { color: var(--faint); width: 22px; height: 28px; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; padding: 0; }
+    .card-collapse .icon { transition: transform .16s; }
+    .card-collapse.closed .icon { transform: rotate(-90deg); }
+    .card-heading { flex: 1; min-width: 0; }
+    .card-title-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .card-number { color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 600; }
+    .card-title { font-size: 14px; font-weight: 680; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-meta { margin-top: 4px; color: var(--faint); font-size: 11px; display: flex; align-items: center; gap: 7px; }
+    .meta-dot::before { content: "·"; margin-right: 7px; }
+    .type-badge, .status-badge, .tiny-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 5px; padding: 3px 7px; font-size: 10px; font-weight: 620; white-space: nowrap; }
+    .type-badge { color: var(--muted); background: #f0f1f4; }
+    .type-badge.history { color: var(--accent-dark); background: var(--accent-soft); }
+    .status-badge.confirmed { color: var(--green); background: var(--green-soft); }
+    .status-badge.pending { color: var(--accent-dark); background: var(--accent-soft); }
+    .status-badge.review { color: var(--amber); background: var(--amber-soft); }
+    .status-badge.gap { color: var(--red); background: var(--red-soft); }
+    .card-actions { display: flex; align-items: center; gap: 3px; }
+    .card-body { padding: 0 20px 16px 53px; animation: reveal .18s ease; }
+    .card-body.collapsed { display: none; }
+    .document-content { color: #353941; font-size: 13px; line-height: 1.85; }
+    .document-content p { margin: 0 0 10px; }
+    .document-content p:last-child { margin-bottom: 0; }
+    .document-content ol { margin: 7px 0 12px; padding-left: 22px; }
+    .document-content li { margin: 3px 0; }
+    .fact { color: var(--accent-dark); border-bottom: 1px dotted #8881e8; cursor: help; padding: 0 2px; }
+    .inline-ref { color: var(--accent-dark); background: var(--accent-soft); border: 0; border-radius: 4px; padding: 1px 4px; font-size: 11px; cursor: pointer; white-space: nowrap; }
+    .empty-slot { border: 1px dashed #dbb4b8; background: #fff8f8; color: #8a4c53; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; }
+    .empty-slot .icon { color: var(--red); }
+    .empty-slot-copy { flex: 1; }
+    .empty-slot-title { font-weight: 650; font-size: 12px; }
+    .empty-slot-sub { font-size: 11px; margin-top: 2px; color: #a36b71; }
+    .attachment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .attachment-item { border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 9px; background: var(--panel-subtle); }
+    .attachment-item .icon { color: var(--muted); }
+    .attachment-name { font-size: 12px; font-weight: 600; }
+    .attachment-meta { font-size: 10px; color: var(--faint); margin-top: 2px; }
+    .card-footer { margin-top: 15px; padding-top: 11px; border-top: 1px solid #edf0f3; display: flex; align-items: center; gap: 9px; }
+    .asset-origin { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; color: var(--faint); font-size: 11px; }
+    .asset-origin span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .footer-link { border: 0; background: transparent; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; padding: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; }
+    .footer-link:hover { color: var(--accent); }
+    .group-card { background: rgba(255,255,255,.55); }
+    .group-card .card-header { min-height: 50px; padding-top: 9px; padding-bottom: 9px; }
+    .group-card .card-title { font-size: 13px; }
+    .nested-guide { position: absolute; left: 24px; top: 52px; bottom: 12px; width: 1px; background: var(--line); }
+
+    .inspector-head { padding: 14px 15px 12px; border-bottom: 1px solid var(--line); }
+    .inspector-kicker { color: var(--faint); font-size: 10px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+    .inspector-title { font-size: 14px; font-weight: 680; line-height: 21px; display: flex; align-items: center; gap: 8px; }
+    .inspector-tabs { display: flex; border-bottom: 1px solid var(--line); padding: 0 12px; }
+    .inspector-tab { border: 0; background: transparent; color: var(--muted); height: 41px; padding: 0 9px; font-size: 12px; cursor: pointer; position: relative; }
+    .inspector-tab.active { color: var(--accent-dark); font-weight: 650; }
+    .inspector-tab.active::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
+    .inspector-content { flex: 1; min-height: 0; overflow-y: auto; padding: 13px; }
+    .inspector-section-title { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 11px; margin: 3px 1px 10px; }
+    .inspector-section-title strong { color: var(--ink); font-weight: 650; }
+    .version-list { display: grid; gap: 9px; }
+    .version-item { border: 1px solid var(--line); border-radius: 10px; padding: 11px; position: relative; transition: border-color .15s, background .15s; }
+    .version-item:hover { border-color: #c5cbd6; }
+    .version-item.selected { border-color: #9b95ed; background: #fbfaff; }
+    .version-top { display: flex; align-items: flex-start; gap: 7px; }
+    .version-radio { width: 14px; height: 14px; border: 1.5px solid #b6bcc7; border-radius: 50%; margin-top: 2px; display: grid; place-items: center; flex: 0 0 auto; }
+    .version-item.selected .version-radio { border-color: var(--accent); }
+    .version-item.selected .version-radio::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .version-name { flex: 1; min-width: 0; }
+    .version-name strong { font-size: 12px; line-height: 18px; display: block; }
+    .version-revision { color: var(--faint); font-size: 10px; margin-top: 2px; }
+    .current-tag { color: var(--accent-dark); background: var(--accent-soft); border-radius: 4px; padding: 2px 5px; font-size: 9px; white-space: nowrap; }
+    .recommended-tag { color: var(--green); background: var(--green-soft); border-radius: 4px; padding: 2px 5px; font-size: 9px; white-space: nowrap; }
+    .version-source { margin: 9px 0 8px 21px; font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .version-stats { margin-left: 21px; display: flex; align-items: center; gap: 12px; font-size: 10px; color: var(--faint); }
+    .version-stats strong { color: var(--ink); font-weight: 600; }
+    .version-actions { margin: 10px 0 0 21px; display: flex; align-items: center; justify-content: space-between; }
+    .version-note { font-size: 10px; color: var(--amber); display: flex; align-items: center; gap: 4px; }
+    .version-tip { margin-top: 12px; padding: 10px; background: var(--panel-subtle); border-radius: 8px; color: var(--muted); font-size: 10px; line-height: 17px; display: flex; gap: 7px; }
+    .inspector-footer { border-top: 1px solid var(--line); padding: 12px 13px; background: var(--panel); }
+    .confirm-note { color: var(--faint); font-size: 10px; text-align: center; margin-top: 7px; line-height: 15px; }
+    .inspector-footer .btn { width: 100%; }
+    .requirement-list { display: grid; gap: 8px; }
+    .requirement-item { border-bottom: 1px solid #edf0f3; padding: 0 0 11px; }
+    .requirement-top { display: flex; align-items: flex-start; gap: 7px; }
+    .req-state { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; margin-top: 1px; flex: 0 0 auto; }
+    .req-state.satisfied { color: var(--green); background: var(--green-soft); }
+    .req-state.partial { color: var(--amber); background: var(--amber-soft); }
+    .req-state.missing { color: var(--red); background: var(--red-soft); }
+    .req-title { flex: 1; font-size: 11px; line-height: 18px; }
+    .req-id { color: var(--faint); font-family: ui-monospace, monospace; font-size: 9px; margin: 4px 0 0 23px; }
+    .req-actions { margin: 6px 0 0 23px; display: flex; gap: 8px; }
+    .text-btn { padding: 0; border: 0; background: transparent; color: var(--accent); font-size: 10px; cursor: pointer; }
+    .text-btn:hover { text-decoration: underline; }
+    .coverage-summary { background: var(--panel-subtle); border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+    .coverage-summary-line { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 7px; }
+    .activity-list { position: relative; padding-left: 17px; }
+    .activity-list::before { content: ""; position: absolute; left: 4px; top: 5px; bottom: 5px; width: 1px; background: var(--line); }
+    .activity-item { position: relative; padding: 0 0 17px 8px; }
+    .activity-item::before { content: ""; position: absolute; left: -17px; top: 5px; width: 7px; height: 7px; border: 2px solid white; border-radius: 50%; background: #aab0bb; box-shadow: 0 0 0 1px #d4d8df; }
+    .activity-item:first-child::before { background: var(--accent); }
+    .activity-text { font-size: 11px; line-height: 18px; }
+    .activity-time { color: var(--faint); font-size: 10px; margin-top: 3px; }
+    .empty-inspector { color: var(--muted); text-align: center; padding: 40px 14px; font-size: 12px; line-height: 20px; }
+
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(22,25,32,.42); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 100; backdrop-filter: blur(2px); }
+    .modal-backdrop.open { display: flex; animation: fadeIn .16s ease; }
+    .modal { background: var(--panel); width: min(900px, 96vw); max-height: 88vh; border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; animation: modalIn .2s ease; }
+    .modal.medium { width: min(650px, 95vw); }
+    .modal-header { padding: 17px 20px; display: flex; align-items: flex-start; gap: 12px; border-bottom: 1px solid var(--line); }
+    .modal-heading { flex: 1; }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-subtitle { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .modal-body { padding: 18px 20px; overflow-y: auto; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .modal-footer-note { color: var(--muted); font-size: 11px; }
+    .modal-footer-actions { display: flex; gap: 8px; }
+    .compare-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .compare-alert { padding: 10px 12px; background: var(--amber-soft); color: #785017; border-radius: 8px; font-size: 11px; line-height: 18px; display: flex; gap: 8px; margin-bottom: 14px; }
+    .diff-head, .diff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .diff-head { margin-bottom: 7px; color: var(--muted); font-size: 11px; font-weight: 600; }
+    .diff-version { padding: 0 10px; }
+    .diff-table { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+    .diff-row { border-top: 1px solid #edf0f3; }
+    .diff-row:first-child { border-top: 0; }
+    .diff-cell { padding: 9px 11px; font-size: 11px; line-height: 18px; min-width: 0; }
+    .diff-cell + .diff-cell { border-left: 1px solid #edf0f3; }
+    .diff-row.same .diff-cell { color: var(--muted); background: #fafbfc; }
+    .diff-cell.del { background: var(--red-soft); color: #873a40; text-decoration: line-through; text-decoration-color: rgba(189,60,69,.35); }
+    .diff-cell.add { background: var(--green-soft); color: #176c4c; }
+    .source-paper { border: 1px solid var(--line); border-radius: 9px; padding: 22px 24px; background: #fdfdfc; font-family: "Songti SC", SimSun, serif; font-size: 14px; line-height: 2; }
+    .source-location { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; margin-bottom: 12px; }
+    .source-highlight { background: #fff0ae; padding: 2px 1px; }
+    .source-extraction { margin-top: 14px; display: grid; grid-template-columns: 100px 1fr; gap: 8px; font-size: 11px; }
+    .source-extraction dt { color: var(--faint); }
+    .source-extraction dd { margin: 0; }
+    .export-score { display: flex; align-items: center; gap: 15px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .score-ring { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--accent) var(--progress), #e9ebf0 0); position: relative; }
+    .score-ring::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: white; }
+    .score-ring strong { position: relative; z-index: 1; font-size: 14px; }
+    .export-score-copy { flex: 1; }
+    .export-score-copy strong { display: block; font-size: 14px; margin-bottom: 4px; }
+    .export-score-copy span { color: var(--muted); font-size: 11px; }
+    .export-checks { margin: 14px 0; display: grid; gap: 9px; }
+    .export-check { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+    .export-check .icon { color: var(--green); }
+    .export-check.warn .icon { color: var(--amber); }
+    .export-check.danger .icon { color: var(--red); }
+    .export-check span { flex: 1; }
+    .export-check small { color: var(--faint); }
+    .blocker-list { border-top: 1px solid var(--line); padding-top: 12px; }
+    .blocker-title { font-size: 11px; font-weight: 650; margin-bottom: 8px; }
+    .blocker-item { display: flex; align-items: center; gap: 7px; padding: 7px 0; color: var(--muted); font-size: 11px; }
+    .blocker-item .tree-status { flex: 0 0 auto; }
+    .blocker-item button { margin-left: auto; }
+
+    .toast-stack { position: fixed; right: 20px; bottom: 20px; z-index: 200; display: grid; gap: 9px; pointer-events: none; }
+    .toast { background: #282b32; color: white; border-radius: 9px; box-shadow: 0 8px 24px rgba(0,0,0,.2); padding: 11px 14px; min-width: 260px; max-width: 390px; display: flex; align-items: flex-start; gap: 9px; font-size: 12px; line-height: 18px; animation: toastIn .2s ease; }
+    .toast .icon { color: #aaa3ff; margin-top: 1px; }
+    .toast.success .icon { color: #77ddb1; }
+    .toast.warning .icon { color: #f2c674; }
+    .mobile-toggle { display: none; }
+
+    @keyframes reveal { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes contentPulse { 0% { box-shadow: 0 0 0 0 rgba(81,70,229,.25); } 100% { box-shadow: 0 0 0 9px rgba(81,70,229,0); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+    @media (max-width: 1240px) {
+      .workspace { grid-template-columns: 224px minmax(400px, 1fr) 324px; }
+      .brand { min-width: 178px; }
+      .project-metrics { gap: 14px; }
+      .agent-state span { display: none; }
+    }
+    @media (max-width: 1020px) {
+      .workspace { grid-template-columns: 218px minmax(0, 1fr); }
+      .right-panel { display: none; position: fixed; right: 0; top: 58px; bottom: 0; width: 348px; z-index: 60; box-shadow: var(--shadow); }
+      .right-panel.mobile-open { display: flex; }
+      .mobile-toggle.inspector-toggle { display: inline-flex; }
+      .project-metrics .metric:nth-child(2) { display: none; }
+      .agent-state { display: none; }
+    }
+    @media (max-width: 740px) {
+      body { overflow: auto; }
+      .app { min-width: 0; grid-template-rows: 58px auto minmax(0,1fr); }
+      .brand { min-width: auto; }
+      .brand-sub, .header-separator, .project-switch, #snapshotBtn { display: none; }
+      .app-header { padding: 0 12px; gap: 10px; }
+      .project-strip { padding: 10px 13px; }
+      .project-metrics .metric { display: none; }
+      .readiness { min-width: 108px; }
+      .readiness-bar { width: 64px; }
+      .workspace { grid-template-columns: 1fr; }
+      .left-panel { display: none; position: fixed; left: 0; top: 58px; bottom: 0; width: 260px; z-index: 60; box-shadow: var(--shadow); }
+      .left-panel.mobile-open { display: flex; }
+      .mobile-toggle.tree-toggle { display: inline-flex; }
+      .workspace-name span { display: none; }
+      .workspace-toolbar { padding: 0 10px; }
+      .structure-actions .hierarchy-btn { display: none; }
+      .card-stream { padding: 12px 10px 70px; }
+      .card-body { padding-left: 20px; }
+      .attachment-grid { grid-template-columns: 1fr; }
+      .diff-head, .diff-row { grid-template-columns: 1fr; }
+      .diff-head .diff-version:last-child { display: none; }
+      .diff-cell.del { display: none; }
+      .diff-cell + .diff-cell { border-left: 0; }
+      .modal-backdrop { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.7 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="8" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="18" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="18" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.1 1.1M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.1-1.1"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-indent" viewBox="0 0 24 24"><path d="M3 5h18M11 9h10M11 13h10M3 17h18M3 9l4 2-4 2"/></symbol>
+    <symbol id="i-outdent" viewBox="0 0 24 24"><path d="M3 5h18M11 9h10M11 13h10M3 17h18M7 9l-4 2 4 2"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="m21.4 11.6-8.9 8.9a6 6 0 0 1-8.5-8.5l9.5-9.5a4 4 0 0 1 5.7 5.7l-9.5 9.5a2 2 0 0 1-2.8-2.8l8.8-8.8"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></symbol>
+  </svg>
+
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark"><svg class="icon"><use href="#i-layers"/></svg></div>
+        <div><div class="brand-name">标书工坊</div><div class="brand-sub">BID STUDIO</div></div>
+      </div>
+      <div class="header-separator"></div>
+      <button class="project-switch" id="projectSwitch"><svg class="icon sm"><use href="#i-file"/></svg><span>2026 年度数据库采购项目 · 第 03 包</span><svg class="icon sm"><use href="#i-chevron-down"/></svg></button>
+      <div class="header-spacer"></div>
+      <button class="agent-state" id="agentState"><span class="pulse"></span><span>Agent 正在复核关联条款</span><strong>82%</strong></button>
+      <button class="btn" id="snapshotBtn"><svg class="icon sm"><use href="#i-camera"/></svg>保存快照</button>
+      <button class="btn primary" id="exportBtn"><svg class="icon sm"><use href="#i-download"/></svg>导出</button>
+      <div class="avatar" title="当前用户：林澄">林</div>
+    </header>
+
+    <section class="project-strip">
+      <div class="project-identity">
+        <div class="breadcrumb">应标项目<svg class="icon sm"><use href="#i-chevron-right"/></svg>2026-041<svg class="icon sm"><use href="#i-chevron-right"/></svg>第 03 包</div>
+        <div class="project-title-line"><div class="project-title">星河大学 2026 年度数据库采购项目</div><span class="draft-badge">章节初稿</span></div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric"><div class="metric-label">内容章节</div><div class="metric-value" id="chapterMetric">10 个</div></div>
+        <div class="metric"><div class="metric-label">待处理缺口</div><div class="metric-value warn" id="gapMetric">3 项</div></div>
+        <div class="readiness"><div><div class="metric-label">人工确认</div><div class="metric-value" id="confirmMetric">5 / 10</div></div><div><div class="readiness-bar"><div class="readiness-fill" id="readinessFill" style="width:50%"></div></div></div></div>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <aside class="left-panel" id="leftPanel">
+        <div class="panel-head"><div><div class="panel-title">章节结构</div><div class="panel-subtitle">拖拽排序，章节身份保持不变</div></div><button class="icon-btn" title="结构操作说明" id="structureHelp"><svg class="icon sm"><use href="#i-info"/></svg></button></div>
+        <div class="tree-tools">
+          <div class="search-box"><svg class="icon sm"><use href="#i-search"/></svg><input id="treeSearch" type="search" placeholder="搜索章节" aria-label="搜索章节"></div>
+          <div class="tree-hint"><svg class="icon sm"><use href="#i-grip"/></svg>可拖动的为企业补充章节<svg class="icon sm" style="margin-left:auto"><use href="#i-lock"/></svg>招标固定</div>
+        </div>
+        <nav class="chapter-tree" id="chapterTree" aria-label="标书章节树"></nav>
+        <div class="left-summary">
+          <div class="coverage-line"><span>评分项内容覆盖</span><strong>13 / 16</strong></div>
+          <div class="mini-progress"><div style="width:81.25%"></div></div>
+          <button class="gap-link" id="gapLink"><span>2 个评分证据仍有缺口</span><svg class="icon sm"><use href="#i-arrow-right"/></svg></button>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <div class="workspace-toolbar">
+          <div class="workspace-name"><button class="icon-btn mobile-toggle tree-toggle" id="treeToggle" aria-label="打开章节树"><svg class="icon"><use href="#i-menu"/></svg></button><h1>卡片式初稿</h1><span id="saveStatus">所有更改已保存 · 14:32</span></div>
+          <div class="structure-actions">
+            <button class="icon-btn hierarchy-btn" id="outdentBtn" title="减少层级（移出当前父章节）"><svg class="icon sm"><use href="#i-outdent"/></svg></button>
+            <button class="icon-btn hierarchy-btn" id="indentBtn" title="增加层级（成为上一章节的子章节）"><svg class="icon sm"><use href="#i-indent"/></svg></button>
+            <span class="toolbar-divider"></span>
+            <button class="btn ghost small" id="expandAllBtn"><svg class="icon sm"><use href="#i-expand"/></svg>全部展开</button>
+            <button class="icon-btn mobile-toggle inspector-toggle" id="inspectorToggle" aria-label="打开章节检查器"><svg class="icon"><use href="#i-filter"/></svg></button>
+          </div>
+        </div>
+        <div class="impact-banner" id="impactBanner" hidden>
+          <svg class="icon"><use href="#i-alert"/></svg>
+          <div class="impact-copy"><strong id="impactTitle">版本切换影响了 2 个关联章节</strong><span id="impactText">实施周期与人员配置发生变化，相关章节已标记为“待复核”。</span></div>
+          <div class="impact-actions"><button class="btn small" id="viewImpactBtn">查看影响</button><button class="icon-btn" id="dismissImpact" aria-label="收起提示"><svg class="icon sm"><use href="#i-x"/></svg></button></div>
+        </div>
+        <div class="card-stream" id="cardStream">
+          <div class="stream-intro"><span><svg class="icon sm"><use href="#i-info"/></svg>卡片是当前工作版本，导出时按章节树自动组装</span><span>按章节显示</span></div>
+          <div id="chapterCards"></div>
+        </div>
+      </main>
+
+      <aside class="right-panel" id="rightPanel">
+        <div class="inspector-head">
+          <div class="inspector-kicker"><span>当前章节</span><span id="inspectorSectionId">SEC-04.02</span></div>
+          <div class="inspector-title"><span id="inspectorTitle">总体实施方案</span><span id="inspectorStatus"></span></div>
+        </div>
+        <div class="inspector-tabs" role="tablist">
+          <button class="inspector-tab active" data-tab="versions" role="tab">候选版本 <span id="versionCount">3</span></button>
+          <button class="inspector-tab" data-tab="clauses" role="tab">关联条款 <span id="clauseCount">5</span></button>
+          <button class="inspector-tab" data-tab="activity" role="tab">审阅记录</button>
+        </div>
+        <div class="inspector-content" id="inspectorContent"></div>
+        <div class="inspector-footer" id="inspectorFooter"></div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="diffModal" role="dialog" aria-modal="true" aria-labelledby="diffTitle">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-heading"><div class="modal-title" id="diffTitle">候选版本差异</div><div class="modal-subtitle" id="diffSubtitle"></div></div><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <div class="modal-body" id="diffBody"></div>
+      <div class="modal-footer"><div class="modal-footer-note">切换后，该章节需重新确认，关联章节将重新校验。</div><div class="modal-footer-actions"><button class="btn modal-close">取消</button><button class="btn primary" id="applyVersionBtn"><svg class="icon sm"><use href="#i-copy"/></svg>使用此版本</button></div></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="sourceModal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
+    <div class="modal medium">
+      <div class="modal-header"><div class="modal-heading"><div class="modal-title" id="sourceTitle">招标原文</div><div class="modal-subtitle" id="sourceSubtitle"></div></div><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <div class="modal-body" id="sourceBody"></div>
+      <div class="modal-footer"><div class="modal-footer-note">原文锚点与当前内容版本绑定，可用于补遗差异复核。</div><div class="modal-footer-actions"><button class="btn modal-close">关闭</button></div></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+    <div class="modal medium">
+      <div class="modal-header"><div class="modal-heading"><div class="modal-title" id="exportTitle">导出标书</div><div class="modal-subtitle">导出当前章节树与已选内容版本，不覆盖工作区。</div></div><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <div class="modal-body" id="exportBody"></div>
+      <div class="modal-footer"><div class="modal-footer-note">审阅版保留占位符与溯源标记。</div><div class="modal-footer-actions"><button class="btn" id="reviewExportBtn">导出审阅版</button><button class="btn primary" id="finalExportBtn">导出正式版</button></div></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+  <script>
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const icon = (name, cls = '') => `<svg class="icon ${cls}"><use href="#i-${name}"/></svg>`;
+    const esc = (value) => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+    const version = (id, name, revision, source, body, extra = {}) => ({
+      id, name, revision, source, body,
+      coverage: 100, usage: '企业通用', note: '', recommended: false,
+      lines: body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().split('。').filter(Boolean).map(v => v.trim() + '。'),
+      ...extra
+    });
+
+    const implVersions = [
+      version('impl-standard', '标准实施方案', 'v3.2 · 2026-10-18 发布', '企业素材库 / 实施交付 / 数据库产品', `
+        <p>本项目采用“准备、部署、联调、试运行、验收”五阶段实施路径，由项目经理统一协调资源开通、客户端部署、数据权限配置与用户培训。</p>
+        <ol><li>项目准备：确认部署清单、网络策略与账号权限，形成项目实施基线。</li><li>部署联调：完成客户端安装、数据服务开通及访问策略验证。</li><li>试运行与验收：选取业务代表开展试用，按验收清单逐项确认。</li></ol>
+        <p>标准实施周期为 <span class="fact" title="统一事实字段：implementation.days">20 个工作日</span>，投入 <span class="fact" title="统一事实字段：implementation.team">5 人</span>，采用远程支持配合关键节点现场服务。</p>`, {
+        coverage: 80, usage: '近一年用于 12 个项目',
+        lines: ['本项目采用准备、部署、联调、试运行、验收五阶段实施路径。', '由项目经理统一协调资源开通、客户端部署、数据权限配置与用户培训。', '标准实施周期为 20 个工作日，投入 5 人。', '采用远程支持配合关键节点现场服务。']
+      }),
+      version('impl-campus', '高校数据库 · 驻场实施方案', 'v2.1 · 2026-09-26 发布', '行业素材库 / 高校客户 / 实施交付', `
+        <p>针对高校图书馆多角色、多终端的使用特点，项目实施采用“环境核查、驻场部署、分角色联调、集中培训、验收回访”五阶段路径。</p>
+        <ol><li>环境核查：逐台确认终端环境、校园网策略与访问权限。</li><li>驻场部署：安排实施工程师在校完成安装、账号配置与异常排查。</li><li>培训验收：分别面向管理员、馆员与读者代表组织培训及试用验收。</li></ol>
+        <p>计划实施周期为 <span class="fact" title="统一事实字段：implementation.days">15 个工作日</span>，投入 <span class="fact" title="统一事实字段：implementation.team">6 人</span>，其中 <span class="fact" title="统一事实字段：implementation.onsite">2 人驻场 5 天</span>。</p>`, {
+        coverage: 100, usage: '近一年用于 5 个高校项目', recommended: true, note: '驻场人员需确认',
+        lines: ['针对高校图书馆多角色、多终端的使用特点制定实施路径。', '项目实施采用环境核查、驻场部署、分角色联调、集中培训、验收回访五阶段路径。', '计划实施周期为 15 个工作日，投入 6 人。', '其中 2 人驻场 5 天。'],
+        impacts: ['技术条款偏离表', '项目组成员一览表']
+      }),
+      version('impl-history', '2025 星河大学项目 · 确认终稿', 'v1.4 · 2025-12-16 项目快照', '历史项目 / 星河大学 / 2025 数据库续约', `
+        <p>沿用 2025 年项目最终确认的实施组织方式，由图书馆信息化负责人与我方项目经理共同确认实施清单，按照“开通、部署、培训、试运行”四个阶段推进。</p>
+        <ol><li>优先开通既有账号与历史权限，保留用户使用习惯。</li><li>对新增终端执行客户端安装和访问策略配置。</li><li>复用上年度培训材料，补充本次新增资源内容。</li></ol>
+        <p>原计划实施周期为 <span class="fact" title="历史项目字段，需重新确认">18 个工作日</span>，投入 <span class="fact" title="历史项目字段，需重新确认">4 人</span>。沿用前需复核本年度服务范围与人员安排。</p>`, {
+        coverage: 90, usage: '同客户历史最终确认版本', note: '2 项事实待复核',
+        lines: ['沿用 2025 年项目最终确认的实施组织方式。', '由图书馆信息化负责人与我方项目经理共同确认实施清单。', '原计划实施周期为 18 个工作日，投入 4 人。', '沿用前需复核本年度服务范围与人员安排。'],
+        impacts: ['技术条款偏离表', '项目组成员一览表']
+      })
+    ];
+
+    const understandingVersions = [
+      version('understand-history', '高校续约项目理解', 'v2.0 · 历史项目终稿', '历史项目 / 星河大学 / 2025 数据库采购', `<p>本项目是在既有数据库服务基础上的续建与扩充。建设重点不仅是完成资源开通，还包括保持既有访问连续性、核对新增资源范围，以及降低终端升级对馆员和读者的影响。</p><p>实施过程应与图书馆年度服务安排衔接，在合同生效后优先完成账号权限核查和资源开通确认。</p>`, {usage:'同客户历史版本', recommended:true}),
+      version('understand-standard', '数据库采购项目理解', 'v1.8 · 企业通用', '企业素材库 / 项目理解 / 数据库', `<p>本项目拟通过统一的数据服务与客户端环境，为教学、科研及馆藏服务提供稳定的数据资源支撑。项目需要同时关注资源覆盖、访问稳定性、终端适配和用户培训。</p>`, {coverage:85})
+    ];
+
+    const serviceVersions = [
+      version('service-advanced', '高校专属服务方案', 'v2.3 · 行业发布版', '行业素材库 / 高校客户 / 售后服务', `<p>服务期内提供 7×24 小时故障受理，一般问题 30 分钟内响应；影响资源访问的重大故障 10 分钟内响应，并启动远程与现场协同处理。</p><p>每学期提供一次使用回访，面向图书馆管理员提供资源统计与账号使用复盘。</p>`, {coverage:100, recommended:true, usage:'近一年用于 8 个高校项目'}),
+      version('service-standard', '标准售后服务承诺', 'v3.0 · 企业发布版', '企业素材库 / 售后服务 / 标准版', `<p>服务期内提供 7×24 小时故障受理，一般问题 2 小时内响应，重大故障 30 分钟内响应。提供远程支持、必要的现场协助及年度使用回访。</p>`, {coverage:80})
+    ];
+
+    const simpleVersion = (id, title, body, source = '招标文件 / 响应文件格式') => [version(id + '-v1', title, 'v1.0 · 当前工作版本', source, body)];
+
+    const state = {
+      activeId: 'implementation',
+      inspectorTab: 'versions',
+      treeSearch: '',
+      collapsedTree: new Set(),
+      collapsedCards: new Set(['quote', 'identity', 'license', 'finance', 'commercial']),
+      impacts: new Set(),
+      changedId: null,
+      draggedId: null,
+      diffContext: null,
+      snapshotNo: 2,
+      activity: [
+        {sectionId:'understanding', text:'林澄确认了“项目理解”的当前版本', time:'今天 14:26'},
+        {sectionId:'implementation', text:'Agent 新增“高校驻场实施方案”候选，覆盖 5/5 条款', time:'今天 14:21'},
+        {sectionId:'cases', text:'系统识别到“近三年类似项目”证明材料缺口', time:'今天 14:18'},
+        {sectionId:'service', text:'版本切换后，技术条款偏离表需要复核', time:'今天 14:12'}
+      ],
+      sections: [
+        {id:'quote', title:'报价函', locked:true, type:'tender', status:'confirmed', selectedVersion:'quote-v1', versions:simpleVersion('quote','招标报价函模板', `<p>我方已收到本项目采购文件，经详细研究，决定参加第 03 包采购活动，并承诺按照采购文件要求提交响应文件。</p><p>报价金额：由报价模块统一注入，当前章节不手工填写。</p>`), requirements:[{id:'R-FMT-001',title:'报价函须使用采购文件规定格式并签字盖章',status:'satisfied',quote:'报价函应按本章规定格式填写，并由法定代表人或授权代表签字、加盖公章。'}]},
+        {id:'identity', title:'法定代表人身份证明及授权书', locked:true, type:'tender', status:'confirmed', selectedVersion:'identity-v1', versions:simpleVersion('identity','招标身份证明材料', `<div class="attachment-grid"><div class="attachment-item">${icon('paperclip')}<div><div class="attachment-name">法定代表人身份证明</div><div class="attachment-meta">企业证照库 · 已核验</div></div></div><div class="attachment-item">${icon('paperclip')}<div><div class="attachment-name">授权代表身份证</div><div class="attachment-meta">待签字后替换扫描件</div></div></div></div>`), requirements:[{id:'R-FMT-003',title:'法定代表人身份证明及授权材料齐全',status:'satisfied',quote:'供应商代表为授权代表的，应提供法定代表人授权书及双方身份证明材料。'}]},
+        {id:'qualification', title:'资格证明文件', locked:true, type:'group', status:'pending', children:[
+          {id:'license', title:'营业执照及资质证书', locked:true, type:'attachment', status:'confirmed', selectedVersion:'license-v1', versions:simpleVersion('license','企业资质附件组', `<div class="attachment-grid"><div class="attachment-item">${icon('file')}<div><div class="attachment-name">营业执照</div><div class="attachment-meta">有效期：长期 · 已确认</div></div></div><div class="attachment-item">${icon('file')}<div><div class="attachment-name">质量管理体系认证</div><div class="attachment-meta">有效期至 2028-06 · 已确认</div></div></div></div>`, '企业证照库 / 当前有效版本'), requirements:[{id:'R-QUAL-002',title:'提供有效营业执照及相关能力证明',status:'satisfied',quote:'供应商须提供有效营业执照副本复印件，并根据采购需求提供履约能力证明。'}]},
+          {id:'finance', title:'财务状况报告', locked:true, type:'attachment', status:'pending', selectedVersion:'finance-v1', versions:simpleVersion('finance','2025 年度审计报告', `<div class="empty-slot">${icon('paperclip')}<div class="empty-slot-copy"><div class="empty-slot-title">审计报告已选择，签章页待替换</div><div class="empty-slot-sub">企业证照库 / 2025 年度审计报告 · 共 46 页</div></div><button class="btn small" data-action="resolve-gap" data-section="finance">标记已补齐</button></div>`, '企业证照库 / 财务资料'), requirements:[{id:'R-QUAL-004',title:'提供经审计的年度财务报告',status:'partial',quote:'供应商应提供最近一个完整会计年度经会计师事务所审计的财务报告。'}]},
+          {id:'cases', title:'近三年类似项目业绩', locked:true, type:'attachment', status:'gap', selectedVersion:'cases-v1', versions:simpleVersion('cases','类似项目证明材料', `<div class="empty-slot">${icon('alert')}<div class="empty-slot-copy"><div class="empty-slot-title">缺少 2 个符合金额门槛的高校案例</div><div class="empty-slot-sub">影响：资格证明完整性、类似业绩评分项（6 分）</div></div><button class="btn small" data-action="resolve-gap" data-section="cases">标记已补齐</button></div>`, '业绩素材库 / 待选择'), requirements:[{id:'R-SCORE-006',title:'近三年高校数据库采购案例，每个最高 3 分',status:'missing',quote:'供应商提供近三年同类高校数据库采购项目业绩，每提供一个有效业绩及合同证明材料得 3 分，最高 6 分。'}]}
+        ]},
+        {id:'technical', title:'技术响应方案', locked:false, type:'group', status:'pending', children:[
+          {id:'understanding', title:'项目理解', locked:false, type:'asset', status:'confirmed', selectedVersion:'understand-history', versions:understandingVersions, requirements:[{id:'R-SCORE-002',title:'项目理解准确，能够识别续约项目重点',status:'satisfied',quote:'根据供应商对项目背景、现状、目标和重点难点的理解程度进行评分，最高 4 分。'}]},
+          {id:'implementation', title:'总体实施方案', locked:false, type:'asset', status:'pending', selectedVersion:'impl-standard', versions:implVersions, requirements:[
+            {id:'R-TECH-021',title:'实施周期不得超过合同签订后 30 日',status:'satisfied',quote:'合同签订后 30 日内完成全部资源开通、客户端部署、联调及验收准备。'},
+            {id:'R-TECH-024',title:'提供完整的项目组织与进度计划',status:'satisfied',quote:'供应商应提供项目实施方案，至少包括项目组织、人员分工、实施步骤、进度安排和验收配合。'},
+            {id:'R-TECH-027',title:'说明现场实施与异常处理安排',status:'partial',quote:'实施方案应结合采购人校园网络与终端环境，说明现场部署、访问异常排查及应急处理机制。'},
+            {id:'R-SCORE-004',title:'实施方案完整、合理，最高 8 分',status:'partial',quote:'实施方案内容完整、步骤合理、人员安排充分且与项目实际匹配，酌情得 0—8 分。'},
+            {id:'R-FMT-009',title:'提供项目组成员一览表',status:'missing',quote:'供应商应按格式提供项目组成员一览表，并附相关能力证明材料。'}
+          ]},
+          {id:'service', title:'售后服务方案', locked:false, type:'asset', status:'review', selectedVersion:'service-advanced', versions:serviceVersions, requirements:[{id:'R-TECH-031',title:'提供服务响应时限与故障处理机制',status:'satisfied',quote:'供应商应明确服务响应渠道、响应时限、故障分级及处理机制。'}]}
+        ]},
+        {id:'technicalDeviation', title:'技术条款偏离表', locked:true, type:'tender', status:'review', selectedVersion:'technicalDeviation-v1', versions:simpleVersion('technicalDeviation','技术条款偏离表', `<p>当前已生成 21 条技术响应。其中 18 条为无偏离、2 条待确认、1 条需结合实施方案复核。</p><div class="empty-slot">${icon('alert')}<div class="empty-slot-copy"><div class="empty-slot-title">实施周期与现场服务描述待同步</div><div class="empty-slot-sub">该表引用总体实施方案中的统一事实字段</div></div></div>`), requirements:[{id:'R-FMT-011',title:'技术条款须逐条响应并说明偏离情况',status:'partial',quote:'供应商应按照采购需求逐项填写技术条款偏离表，不得仅填写“完全响应”而缺少具体说明。'}]},
+        {id:'commercial', title:'商务条款偏离表', locked:true, type:'tender', status:'confirmed', selectedVersion:'commercial-v1', versions:simpleVersion('commercial','商务条款偏离表', `<p>服务期、交付地点、响应有效期等 12 项商务条款已完成响应，当前均标记为无偏离。</p><p>付款方式与违约责任已由商务负责人复核。</p>`), requirements:[{id:'R-FMT-012',title:'商务条款须逐条响应',status:'satisfied',quote:'供应商应逐项填写商务条款偏离表，并对存在偏离的内容作出明确说明。'}]}
+      ]
+    };
+
+    const statusMeta = {
+      confirmed:{label:'已确认', icon:'check-circle'},
+      pending:{label:'待确认', icon:'clock'},
+      review:{label:'待复核', icon:'alert'},
+      gap:{label:'有缺口', icon:'alert'}
+    };
+    const typeMeta = {tender:'招标格式', asset:'素材章节', attachment:'附件单元', group:'章节分组'};
+
+    function allSections(nodes = state.sections, parent = null, depth = 0, numbers = []) {
+      const result = [];
+      nodes.forEach((node, index) => {
+        const currentNumbers = [...numbers, index + 1];
+        result.push({node, parent, depth, number:currentNumbers.join('.')});
+        if (node.children) result.push(...allSections(node.children, node, depth + 1, currentNumbers));
+      });
+      return result;
+    }
+    function contentSections() { return allSections().filter(x => x.node.type !== 'group'); }
+    function getSection(id) { return allSections().find(x => x.node.id === id); }
+    function getCurrentVersion(section) { return section.versions?.find(v => v.id === section.selectedVersion) || section.versions?.[0]; }
+    function findLocation(id, nodes = state.sections, parent = null) {
+      for (let index = 0; index < nodes.length; index++) {
+        if (nodes[index].id === id) return {node:nodes[index], parent, siblings:nodes, index};
+        if (nodes[index].children) {
+          const found = findLocation(id, nodes[index].children, nodes[index]);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+    function stats() {
+      const items = contentSections().map(x => x.node);
+      return {
+        total:items.length,
+        confirmed:items.filter(s => s.status === 'confirmed').length,
+        gaps:items.filter(s => s.status === 'gap').length,
+        pending:items.filter(s => s.status === 'pending').length,
+        review:items.filter(s => s.status === 'review').length
+      };
+    }
+    function statusBadge(status) { const m = statusMeta[status] || statusMeta.pending; return `<span class="status-badge ${status}">${icon(m.icon,'sm')}${m.label}</span>`; }
+    function addActivity(sectionId, text) { state.activity.unshift({sectionId, text, time:'刚刚'}); }
+    function markChanged() {
+      const now = new Date();
+      $('#saveStatus').textContent = `所有更改已保存 · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    }
+    function toast(message, kind = 'success') {
+      const el = document.createElement('div');
+      el.className = `toast ${kind}`;
+      el.innerHTML = `${icon(kind === 'warning' ? 'alert' : 'check-circle')}<span>${esc(message)}</span>`;
+      $('#toastStack').appendChild(el);
+      setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(8px)'; setTimeout(() => el.remove(), 180); }, 3600);
+    }
+
+    function filteredTree(nodes) {
+      const query = state.treeSearch.trim().toLowerCase();
+      if (!query) return nodes;
+      return nodes.reduce((acc, node) => {
+        const children = node.children ? filteredTree(node.children) : [];
+        if (node.title.toLowerCase().includes(query) || children.length) acc.push({...node, children});
+        return acc;
+      }, []);
+    }
+    function renderTreeNodes(nodes, depth = 0) {
+      return nodes.map(node => {
+        const hasChildren = node.children?.length > 0;
+        const closed = state.collapsedTree.has(node.id);
+        const active = node.id === state.activeId;
+        return `<div class="tree-node">
+          <div class="tree-row ${active ? 'active' : ''}" data-id="${node.id}" draggable="${!node.locked}" style="padding-left:${5 + depth * 13}px">
+            ${hasChildren ? `<button class="tree-expander ${closed ? 'closed' : ''}" data-action="toggle-tree" data-id="${node.id}" aria-label="${closed ? '展开' : '收起'}">${icon('chevron-down','sm')}</button>` : '<span class="tree-expander"></span>'}
+            <span class="tree-drag ${node.locked ? 'locked' : ''}" title="${node.locked ? '招标固定章节，不可拖动' : '拖动调整同级顺序'}">${icon(node.locked ? 'lock' : 'grip','sm')}</span>
+            <span class="tree-status ${node.type === 'group' ? '' : node.status}"></span>
+            <span class="tree-label">${esc(node.title)}</span>
+            ${hasChildren ? `<span class="tree-count">${node.children.length}</span>` : ''}
+          </div>
+          ${hasChildren && !closed ? `<div class="tree-children">${renderTreeNodes(node.children, depth + 1)}</div>` : ''}
+        </div>`;
+      }).join('');
+    }
+    function renderTree() { $('#chapterTree').innerHTML = renderTreeNodes(filteredTree(state.sections)); }
+
+    function renderCard(entry) {
+      const {node, depth, number} = entry;
+      const active = node.id === state.activeId;
+      const collapsed = state.collapsedCards.has(node.id);
+      const current = getCurrentVersion(node);
+      const isGroup = node.type === 'group';
+      const childStats = isGroup ? allSections(node.children).filter(x => x.node.type !== 'group').map(x => x.node) : [];
+      const pendingChildren = childStats.filter(s => s.status !== 'confirmed').length;
+      return `<article class="chapter-card ${active ? 'active' : ''} ${isGroup ? 'group-card' : ''} ${state.changedId === node.id ? 'content-changed' : ''}" id="card-${node.id}" data-id="${node.id}" style="margin-left:${Math.min(depth * 13, 39)}px">
+        <span class="card-select-line"></span>
+        ${depth > 0 ? '<span class="nested-guide"></span>' : ''}
+        <div class="card-header" data-action="select-card" data-id="${node.id}">
+          <button class="card-collapse ${collapsed ? 'closed' : ''}" data-action="toggle-card" data-id="${node.id}" aria-label="${collapsed ? '展开章节' : '收起章节'}">${icon('chevron-down','sm')}</button>
+          <div class="card-heading">
+            <div class="card-title-line"><span class="card-number">${number}</span><span class="card-title">${esc(node.title)}</span><span class="type-badge ${current?.id.includes('history') ? 'history' : ''}">${icon(node.locked ? 'lock' : isGroup ? 'layers' : node.type === 'attachment' ? 'paperclip' : 'copy','sm')}${typeMeta[node.type]}</span></div>
+            <div class="card-meta"><span>${isGroup ? `${childStats.length} 个内容章节` : current ? `${esc(current.name)} · ${esc(current.revision.split('·')[0].trim())}` : '未选择内容'}</span>${isGroup && pendingChildren ? `<span class="meta-dot">${pendingChildren} 个待处理</span>` : current?.note ? `<span class="meta-dot">${esc(current.note)}</span>` : ''}</div>
+          </div>
+          ${!isGroup ? statusBadge(node.status) : ''}
+          <div class="card-actions"><button class="icon-btn" data-action="open-clauses" data-id="${node.id}" title="查看关联条款">${icon('link','sm')}</button><button class="icon-btn" data-action="card-more" data-id="${node.id}" title="章节操作">${icon('more','sm')}</button></div>
+        </div>
+        ${!isGroup && current ? `<div class="card-body ${collapsed ? 'collapsed' : ''}">
+          <div class="document-content">${current.body}</div>
+          <div class="card-footer">
+            <div class="asset-origin">${icon(current.id.includes('history') ? 'history' : 'layers','sm')}<span>${esc(current.source)}</span></div>
+            <button class="footer-link" data-action="open-versions" data-id="${node.id}">${icon('copy','sm')}${node.versions.length} 个候选版本</button>
+            <button class="footer-link" data-action="open-clauses" data-id="${node.id}">${icon('link','sm')}${node.requirements?.length || 0} 条关联条款</button>
+          </div>
+        </div>` : ''}
+      </article>`;
+    }
+    function renderCards() { $('#chapterCards').innerHTML = allSections().map(renderCard).join(''); }
+
+    function renderVersions(section) {
+      if (section.type === 'group') return `<div class="empty-inspector">${icon('layers','lg')}<br>这是结构分组，不直接承载正文。<br>选择子章节后可查看候选内容版本。</div>`;
+      const current = getCurrentVersion(section);
+      return `<div class="inspector-section-title"><strong>可复用内容</strong><span>${section.versions.length} 个候选</span></div>
+        <div class="version-list">${section.versions.map(v => {
+          const selected = v.id === section.selectedVersion;
+          return `<div class="version-item ${selected ? 'selected' : ''}">
+            <div class="version-top"><span class="version-radio"></span><div class="version-name"><strong>${esc(v.name)}</strong><div class="version-revision">${esc(v.revision)}</div></div>${selected ? '<span class="current-tag">当前</span>' : v.recommended ? '<span class="recommended-tag">推荐</span>' : ''}</div>
+            <div class="version-source">${icon(v.id.includes('history') ? 'history' : 'layers','sm')}${esc(v.source)}</div>
+            <div class="version-stats"><span>条款覆盖 <strong>${v.coverage}%</strong></span><span>${esc(v.usage)}</span></div>
+            <div class="version-actions"><span class="version-note">${v.note ? `${icon('alert','sm')}${esc(v.note)}` : ''}</span>${selected ? '<span style="font-size:10px;color:var(--faint)">正在使用</span>' : `<button class="text-btn" data-action="compare-version" data-section="${section.id}" data-version="${v.id}">查看差异并切换 ${icon('arrow-right','sm')}</button>`}</div>
+          </div>`;
+        }).join('')}</div>
+        <div class="version-tip">${icon('info','sm')}<span>候选版本由企业素材、行业素材和历史终稿组成。切换只改变当前章节，不会自动覆盖其他章节。</span></div>`;
+    }
+
+    function renderClauses(section) {
+      const reqs = section.requirements || [];
+      if (!reqs.length) return `<div class="empty-inspector">该章节暂无关联条款。</div>`;
+      const satisfied = reqs.filter(r => r.status === 'satisfied').length;
+      return `<div class="coverage-summary"><div class="coverage-summary-line"><span>当前版本条款覆盖</span><strong>${satisfied} / ${reqs.length}</strong></div><div class="mini-progress"><div style="width:${Math.round(satisfied / reqs.length * 100)}%"></div></div></div>
+        <div class="requirement-list">${reqs.map(req => `<div class="requirement-item">
+          <div class="requirement-top"><span class="req-state ${req.status}">${icon(req.status === 'satisfied' ? 'check' : 'alert','sm')}</span><div class="req-title">${esc(req.title)}</div></div>
+          <div class="req-id">${esc(req.id)} · ${req.status === 'satisfied' ? '已覆盖' : req.status === 'partial' ? '部分覆盖' : '待补内容'}</div>
+          <div class="req-actions"><button class="text-btn" data-action="show-source" data-section="${section.id}" data-req="${req.id}">定位招标原文</button>${req.status === 'missing' || section.status === 'gap' ? `<button class="text-btn" data-action="resolve-gap" data-section="${section.id}">标记缺口已补齐</button>` : ''}</div>
+        </div>`).join('')}</div>`;
+    }
+
+    function renderActivity(section) {
+      const items = state.activity.filter(a => a.sectionId === section.id);
+      if (!items.length) return `<div class="empty-inspector">该章节暂无审阅记录。<br>版本切换、确认与结构调整会记录在这里。</div>`;
+      return `<div class="activity-list">${items.map(a => `<div class="activity-item"><div class="activity-text">${esc(a.text)}</div><div class="activity-time">${esc(a.time)}</div></div>`).join('')}</div>`;
+    }
+
+    function renderInspector() {
+      const entry = getSection(state.activeId) || allSections()[0];
+      const section = entry.node;
+      $('#inspectorTitle').textContent = `${entry.number} ${section.title}`;
+      $('#inspectorSectionId').textContent = `SEC-${section.id.toUpperCase().slice(0,10)}`;
+      $('#inspectorStatus').innerHTML = section.type === 'group' ? '' : statusBadge(section.status);
+      $('#versionCount').textContent = section.versions?.length || 0;
+      $('#clauseCount').textContent = section.requirements?.length || 0;
+      $$('.inspector-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === state.inspectorTab));
+      $('#inspectorContent').innerHTML = state.inspectorTab === 'versions' ? renderVersions(section) : state.inspectorTab === 'clauses' ? renderClauses(section) : renderActivity(section);
+      if (section.type === 'group') {
+        $('#inspectorFooter').innerHTML = `<div class="confirm-note">分组章节的内容确认状态由子章节汇总。</div>`;
+      } else {
+        const isConfirmed = section.status === 'confirmed';
+        const isGap = section.status === 'gap';
+        $('#inspectorFooter').innerHTML = `<button class="btn ${isConfirmed ? '' : 'primary'}" id="confirmSectionBtn" ${isConfirmed || isGap ? 'disabled' : ''}>${icon(isConfirmed ? 'check-circle' : 'check','sm')}${isConfirmed ? '当前版本已确认' : isGap ? '请先补齐章节缺口' : '确认当前章节版本'}</button><div class="confirm-note">${isConfirmed ? '切换版本或修改内容后，需要重新确认。' : '确认仅锁定当前 Revision，不影响其他候选版本。'}</div>`;
+      }
+    }
+
+    function renderMetrics() {
+      const s = stats();
+      $('#chapterMetric').textContent = `${s.total} 个`;
+      $('#gapMetric').textContent = `${s.gaps + s.pending + s.review} 项`;
+      $('#confirmMetric').textContent = `${s.confirmed} / ${s.total}`;
+      $('#readinessFill').style.width = `${Math.round(s.confirmed / s.total * 100)}%`;
+    }
+    function renderImpact() {
+      const visible = state.impacts.size > 0;
+      $('#impactBanner').hidden = !visible;
+      if (visible) $('#impactTitle').textContent = `版本切换影响了 ${state.impacts.size} 个关联章节`;
+    }
+    function renderAll() {
+      renderMetrics(); renderTree(); renderCards(); renderInspector(); renderImpact(); markChanged();
+      state.changedId = null;
+    }
+    function selectSection(id, scroll = false) {
+      if (!getSection(id)) return;
+      state.activeId = id;
+      state.collapsedCards.delete(id);
+      renderTree(); renderCards(); renderInspector();
+      if (scroll) requestAnimationFrame(() => $(`#card-${id}`)?.scrollIntoView({behavior:'smooth', block:'start'}));
+    }
+
+    function openDiff(sectionId, candidateId) {
+      const section = getSection(sectionId).node;
+      const current = getCurrentVersion(section);
+      const candidate = section.versions.find(v => v.id === candidateId);
+      if (!candidate || current.id === candidate.id) return;
+      state.diffContext = {sectionId, candidateId};
+      $('#diffSubtitle').textContent = `${section.title} · ${current.revision.split('·')[0]} → ${candidate.revision.split('·')[0]}`;
+      const max = Math.max(current.lines.length, candidate.lines.length);
+      const rows = [];
+      for (let i = 0; i < max; i++) {
+        const left = current.lines[i] || '';
+        const right = candidate.lines[i] || '';
+        if (left === right) rows.push(`<div class="diff-row same"><div class="diff-cell">${esc(left)}</div><div class="diff-cell">${esc(right)}</div></div>`);
+        else rows.push(`<div class="diff-row"><div class="diff-cell ${left ? 'del' : ''}">${esc(left)}</div><div class="diff-cell ${right ? 'add' : ''}">${esc(right)}</div></div>`);
+      }
+      const impacts = candidate.impacts || ['技术条款偏离表'];
+      $('#diffBody').innerHTML = `<div class="compare-meta"><span class="type-badge">${esc(current.name)}</span>${icon('arrow-right')}<span class="type-badge history">${esc(candidate.name)}</span>${candidate.recommended ? '<span class="recommended-tag">推荐</span>' : ''}</div>
+        <div class="compare-alert">${icon('alert')}<div><strong>切换后的连锁影响</strong><br>条款覆盖由 ${current.coverage}% 变为 ${candidate.coverage}%；${impacts.join('、')}将标记为待复核。${candidate.note ? `另外，${candidate.note}。` : ''}</div></div>
+        <div class="diff-head"><div class="diff-version">当前版本 · ${esc(current.revision.split('·')[0])}</div><div class="diff-version">候选版本 · ${esc(candidate.revision.split('·')[0])}</div></div>
+        <div class="diff-table">${rows.join('')}</div>`;
+      openModal('diffModal');
+    }
+    function applyVersion() {
+      const ctx = state.diffContext;
+      if (!ctx) return;
+      const section = getSection(ctx.sectionId).node;
+      const candidate = section.versions.find(v => v.id === ctx.candidateId);
+      const previous = getCurrentVersion(section);
+      section.selectedVersion = candidate.id;
+      section.status = 'pending';
+      const impacted = candidate.impacts || [];
+      impacted.forEach(title => {
+        const target = allSections().find(x => x.node.title === title);
+        if (target && target.node.type !== 'group') {
+          if (target.node.status === 'confirmed') target.node.status = 'review';
+          state.impacts.add(target.node.id);
+        }
+      });
+      if (section.id === 'implementation') {
+        const tech = getSection('technicalDeviation')?.node;
+        if (tech && tech.status === 'confirmed') tech.status = 'review';
+        state.impacts.add('technicalDeviation');
+      }
+      state.impacts.add(section.id);
+      state.changedId = section.id;
+      addActivity(section.id, `从“${previous.name}”切换为“${candidate.name}”，当前版本待重新确认`);
+      closeModals();
+      renderAll();
+      selectSection(section.id, true);
+      toast(`已切换为“${candidate.name}”，请复核影响并重新确认`, 'warning');
+      state.diffContext = null;
+    }
+
+    function showSource(sectionId, reqId) {
+      const section = getSection(sectionId).node;
+      const req = section.requirements?.find(r => r.id === reqId) || section.requirements?.[0];
+      if (!req) return;
+      $('#sourceTitle').textContent = req.title;
+      $('#sourceSubtitle').textContent = `${req.id} · 关联章节：${section.title}`;
+      const quote = esc(req.quote);
+      const highlightText = quote.length > 24 ? quote.slice(0, 24) : quote;
+      $('#sourceBody').innerHTML = `<div class="source-location">${icon('file','sm')}招标文件 · 第五章 采购需求 · 第 42 页 · 条款块 P-0186</div>
+        <div class="source-paper"><span class="source-highlight">${highlightText}</span>${quote.slice(highlightText.length)}</div>
+        <dl class="source-extraction"><dt>条款处理类型</dt><dd>${req.id.includes('SCORE') ? '评分项' : req.id.includes('QUAL') ? '资格性要求' : req.id.includes('FMT') ? '格式要求' : '技术参数'}</dd><dt>当前覆盖状态</dt><dd>${req.status === 'satisfied' ? '当前版本已覆盖' : req.status === 'partial' ? '部分覆盖，建议补充细节' : '存在内容缺口'}</dd><dt>绑定内容版本</dt><dd>${esc(getCurrentVersion(section)?.name || '未绑定')} · ${esc(getCurrentVersion(section)?.revision || '')}</dd></dl>`;
+      openModal('sourceModal');
+    }
+
+    function resolveGap(sectionId) {
+      const section = getSection(sectionId)?.node;
+      if (!section) return;
+      section.status = 'pending';
+      section.requirements?.forEach(r => { if (r.status === 'missing' || r.status === 'partial') r.status = 'satisfied'; });
+      addActivity(section.id, '林澄确认所需材料已补齐，章节进入待确认状态');
+      renderAll();
+      toast('缺口已标记为补齐，请继续确认当前章节版本');
+    }
+    function confirmActiveSection() {
+      const section = getSection(state.activeId).node;
+      if (section.type === 'group' || section.status === 'confirmed' || section.status === 'gap') return;
+      section.status = 'confirmed';
+      state.impacts.delete(section.id);
+      addActivity(section.id, `林澄确认了“${getCurrentVersion(section).name}”`);
+      renderAll();
+      toast(`“${section.title}”已确认，版本选择已写入项目快照`);
+    }
+
+    function openExport() {
+      const s = stats();
+      const percent = Math.round(s.confirmed / s.total * 100);
+      const blockers = contentSections().filter(x => x.node.status !== 'confirmed');
+      $('#exportBody').innerHTML = `<div class="export-score"><div class="score-ring" style="--progress:${percent}%"><strong>${percent}%</strong></div><div class="export-score-copy"><strong>${s.confirmed === s.total ? '正式版已具备导出条件' : '当前可导出审阅版'}</strong><span>${s.confirmed}/${s.total} 个内容章节已确认 · ${s.gaps} 个缺口 · ${s.review} 个待复核</span></div></div>
+        <div class="export-checks"><div class="export-check">${icon('check-circle')}<span>章节结构完整性</span><small>招标必需章节齐全</small></div><div class="export-check ${s.confirmed === s.total ? '' : 'warn'}">${icon(s.confirmed === s.total ? 'check-circle' : 'alert')}<span>人工版本确认</span><small>${s.confirmed}/${s.total}</small></div><div class="export-check ${s.gaps ? 'danger' : ''}">${icon(s.gaps ? 'alert' : 'check-circle')}<span>评分证据与材料缺口</span><small>${s.gaps} 个阻断项</small></div></div>
+        ${blockers.length ? `<div class="blocker-list"><div class="blocker-title">正式版导出前需处理</div>${blockers.slice(0,4).map(x => `<div class="blocker-item"><span class="tree-status ${x.node.status}"></span><span>${x.number} ${esc(x.node.title)}</span><button class="text-btn" data-action="locate-blocker" data-id="${x.node.id}">定位</button></div>`).join('')}${blockers.length > 4 ? `<div style="font-size:10px;color:var(--faint);margin-top:5px">另有 ${blockers.length - 4} 个待处理章节</div>` : ''}</div>` : ''}`;
+      $('#finalExportBtn').disabled = s.confirmed !== s.total || s.gaps > 0;
+      openModal('exportModal');
+    }
+
+    function openModal(id) { $(`#${id}`).classList.add('open'); }
+    function closeModals() { $$('.modal-backdrop.open').forEach(m => m.classList.remove('open')); }
+
+    function indentActive() {
+      const loc = findLocation(state.activeId);
+      if (!loc || loc.node.locked) return toast('招标固定章节不允许调整层级', 'warning');
+      if (loc.index === 0) return toast('当前章节已是首个同级章节，无法成为上一章节的子章节', 'warning');
+      const previous = loc.siblings[loc.index - 1];
+      if (previous.locked) return toast('不能移动到招标固定章节下', 'warning');
+      loc.siblings.splice(loc.index, 1);
+      previous.children = previous.children || [];
+      previous.children.push(loc.node);
+      state.collapsedTree.delete(previous.id);
+      addActivity(loc.node.id, `将“${loc.node.title}”调整为“${previous.title}”的子章节`);
+      renderAll();
+      toast(`已将“${loc.node.title}”移动到“${previous.title}”下`);
+    }
+    function outdentActive() {
+      const loc = findLocation(state.activeId);
+      if (!loc || loc.node.locked) return toast('招标固定章节不允许调整层级', 'warning');
+      if (!loc.parent) return toast('当前章节已处于最外层', 'warning');
+      const parentLoc = findLocation(loc.parent.id);
+      if (!parentLoc.parent && parentLoc.siblings.some((n, i) => i > parentLoc.index && n.locked)) return toast('后方存在招标固定章节，请将章节保留在技术方案分组内', 'warning');
+      loc.siblings.splice(loc.index, 1);
+      parentLoc.siblings.splice(parentLoc.index + 1, 0, loc.node);
+      addActivity(loc.node.id, `将“${loc.node.title}”提升为“${loc.parent.title}”的同级章节`);
+      renderAll();
+      toast(`已提升“${loc.node.title}”的层级`);
+    }
+
+    document.addEventListener('click', event => {
+      const actionEl = event.target.closest('[data-action]');
+      if (actionEl) {
+        const action = actionEl.dataset.action;
+        const id = actionEl.dataset.id;
+        if (action === 'toggle-tree') { event.stopPropagation(); state.collapsedTree.has(id) ? state.collapsedTree.delete(id) : state.collapsedTree.add(id); renderTree(); return; }
+        if (action === 'toggle-card') { event.stopPropagation(); state.collapsedCards.has(id) ? state.collapsedCards.delete(id) : state.collapsedCards.add(id); renderCards(); return; }
+        if (action === 'select-card') { if (!event.target.closest('button')) selectSection(id); return; }
+        if (action === 'open-versions') { state.inspectorTab = 'versions'; selectSection(id); if (window.innerWidth <= 1020) $('#rightPanel').classList.add('mobile-open'); return; }
+        if (action === 'open-clauses') { state.inspectorTab = 'clauses'; selectSection(id); if (window.innerWidth <= 1020) $('#rightPanel').classList.add('mobile-open'); return; }
+        if (action === 'compare-version') { openDiff(actionEl.dataset.section, actionEl.dataset.version); return; }
+        if (action === 'show-source') { showSource(actionEl.dataset.section, actionEl.dataset.req); return; }
+        if (action === 'resolve-gap') { resolveGap(actionEl.dataset.section || state.activeId); return; }
+        if (action === 'locate-blocker') { closeModals(); selectSection(id, true); return; }
+        if (action === 'card-more') { selectSection(id); toast('可在右侧切换版本、查看条款或确认当前章节'); return; }
+      }
+      const tab = event.target.closest('.inspector-tab');
+      if (tab) { state.inspectorTab = tab.dataset.tab; renderInspector(); return; }
+      const row = event.target.closest('.tree-row');
+      if (row && !event.target.closest('button')) selectSection(row.dataset.id, true);
+    });
+
+    $('#treeSearch').addEventListener('input', event => { state.treeSearch = event.target.value; renderTree(); });
+    $('#applyVersionBtn').addEventListener('click', applyVersion);
+    $('#inspectorFooter').addEventListener('click', event => { if (event.target.closest('#confirmSectionBtn')) confirmActiveSection(); });
+    $('#indentBtn').addEventListener('click', indentActive);
+    $('#outdentBtn').addEventListener('click', outdentActive);
+    $('#expandAllBtn').addEventListener('click', () => { state.collapsedCards.clear(); renderCards(); $('#expandAllBtn').innerHTML = `${icon('expand','sm')}已全部展开`; });
+    $('#snapshotBtn').addEventListener('click', () => { state.snapshotNo++; addActivity(state.activeId, `保存项目快照 V${state.snapshotNo}，包含当前章节树与版本选择`); renderInspector(); markChanged(); toast(`快照 V${state.snapshotNo} 已保存，包含当前章节树和所选版本`); });
+    $('#exportBtn').addEventListener('click', openExport);
+    $('#reviewExportBtn').addEventListener('click', () => { closeModals(); toast('审阅版导出任务已创建，将保留占位符与溯源标记'); });
+    $('#finalExportBtn').addEventListener('click', () => { if (!$('#finalExportBtn').disabled) { closeModals(); toast('正式版导出任务已创建'); } });
+    $('#agentState').addEventListener('click', () => toast('新分析结果只写入候选版本，不会自动覆盖已确认章节'));
+    $('#structureHelp').addEventListener('click', () => toast('拖动可调整同级顺序；使用中间工具栏可调整层级。锁定章节由招标格式约束。'));
+    $('#projectSwitch').addEventListener('click', () => toast('当前工作区：2026-041 · 第 03 包'));
+    $('#gapLink').addEventListener('click', () => { state.inspectorTab = 'clauses'; selectSection('cases', true); });
+    $('#dismissImpact').addEventListener('click', () => { $('#impactBanner').hidden = true; });
+    $('#viewImpactBtn').addEventListener('click', () => {
+      const first = [...state.impacts].find(id => id !== state.activeId) || state.activeId;
+      state.inspectorTab = 'clauses'; selectSection(first, true); toast('已定位到受影响章节，关联条款已重新计算', 'warning');
+    });
+    $('#treeToggle').addEventListener('click', () => $('#leftPanel').classList.toggle('mobile-open'));
+    $('#inspectorToggle').addEventListener('click', () => $('#rightPanel').classList.toggle('mobile-open'));
+    $$('.modal-close').forEach(btn => btn.addEventListener('click', closeModals));
+    $$('.modal-backdrop').forEach(backdrop => backdrop.addEventListener('click', event => { if (event.target === backdrop) closeModals(); }));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeModals(); $('#leftPanel').classList.remove('mobile-open'); $('#rightPanel').classList.remove('mobile-open'); } });
+
+    $('#chapterTree').addEventListener('dragstart', event => {
+      const row = event.target.closest('.tree-row');
+      if (!row) return;
+      const loc = findLocation(row.dataset.id);
+      if (!loc || loc.node.locked) { event.preventDefault(); toast('招标固定章节不可拖动', 'warning'); return; }
+      state.draggedId = row.dataset.id;
+      row.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', row.dataset.id);
+    });
+    $('#chapterTree').addEventListener('dragover', event => {
+      const row = event.target.closest('.tree-row');
+      if (!row || !state.draggedId || row.dataset.id === state.draggedId) return;
+      const source = findLocation(state.draggedId);
+      const target = findLocation(row.dataset.id);
+      if (!source || !target || source.siblings !== target.siblings || target.node.locked) return;
+      event.preventDefault();
+      $$('.tree-row').forEach(r => r.classList.remove('drop-before','drop-after'));
+      const rect = row.getBoundingClientRect();
+      row.classList.add(event.clientY < rect.top + rect.height / 2 ? 'drop-before' : 'drop-after');
+    });
+    $('#chapterTree').addEventListener('drop', event => {
+      const row = event.target.closest('.tree-row');
+      if (!row || !state.draggedId) return;
+      event.preventDefault();
+      const source = findLocation(state.draggedId);
+      const target = findLocation(row.dataset.id);
+      if (!source || !target || source.siblings !== target.siblings || target.node.locked) return;
+      const after = row.classList.contains('drop-after');
+      const [moved] = source.siblings.splice(source.index, 1);
+      let targetIndex = target.siblings.findIndex(n => n.id === target.node.id);
+      target.siblings.splice(targetIndex + (after ? 1 : 0), 0, moved);
+      addActivity(moved.id, `调整“${moved.title}”的同级顺序`);
+      state.draggedId = null;
+      renderAll();
+      toast(`已调整“${moved.title}”的顺序，章节编号已自动更新`);
+    });
+    $('#chapterTree').addEventListener('dragend', () => { state.draggedId = null; $$('.tree-row').forEach(r => r.classList.remove('dragging','drop-before','drop-after')); });
+
+    renderAll();
+  </script>
+</body>
+</html>
