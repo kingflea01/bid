@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bid-platform-backend"
+version = "0.1.0"
+description = "Deterministic tender and bid workspace backend"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn[standard]>=0.32,<1",
+  "SQLAlchemy>=2.0.36,<3",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.6,<3",
+  "alembic>=1.14,<2",
+  "psycopg[binary]>=3.2,<4",
+  "python-multipart>=0.0.21,<1",
+  "argon2-cffi>=23.1,<26",
+  "httpx>=0.27,<1",
+  "redis>=5,<8",
+  "rq>=2,<4",
+  "python-docx>=1.1,<2",
+  "lxml>=5,<7",
+  "PyMuPDF>=1.24,<2",
+  "pdfplumber>=0.11,<1",
+  "jsonschema>=4.23,<5",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8,<10",
+  "ruff>=0.8,<1",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+"app.services.ai" = ["prompts/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+  "ignore::DeprecationWarning:passlib",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/models/__init__.py" = ["F401"]
+"tests/conftest.py" = ["E402"]

@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bid_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-bid}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bid_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bid} -d ${POSTGRES_DB:-bid_platform}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bid}:${POSTGRES_PASSWORD:-bid_dev_password}@postgres:5432/${POSTGRES_DB:-bid_platform}
+      REDIS_URL: redis://redis:6379/0
+      FILE_STORAGE_PATH: /data/files
+      SESSION_SECRET: ${SESSION_SECRET:-change-this-session-secret}
+      SESSION_SECURE: "${SESSION_SECURE:-false}"
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
+      AI_ENABLED: ${AI_ENABLED:-false}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_TIMEOUT_SECONDS: ${AI_TIMEOUT_SECONDS:-90}
+    volumes:
+      - file_data:/data/files
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build: ./backend
+    command: rq worker --url redis://redis:6379/0
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-bid}:${POSTGRES_PASSWORD:-bid_dev_password}@postgres:5432/${POSTGRES_DB:-bid_platform}
+      REDIS_URL: redis://redis:6379/0
+      FILE_STORAGE_PATH: /data/files
+      SESSION_SECRET: ${SESSION_SECRET:-change-this-session-secret}
+      AI_ENABLED: ${AI_ENABLED:-false}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_TIMEOUT_SECONDS: ${AI_TIMEOUT_SECONDS:-90}
+    volumes:
+      - file_data:/data/files
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  file_data:
